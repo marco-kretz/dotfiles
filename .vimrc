@@ -31,7 +31,7 @@ Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'klen/python-mode'
 Bundle 'hail2u/vim-css3-syntax'
 Bundle 'amirh/HTML-AutoCloseTag'
-
+Bundle 'Valloric/YouCompleteMe'
 
 "-> LIGHTLINE <-------------"
 filetype plugin indent on
@@ -51,7 +51,6 @@ if !has('gui_running')
 endif
 syntax enable
 set background=dark
-colorscheme solarized
 
 "-> PYTHON MODE <-----------"
 let g:pymode_folding = 0
