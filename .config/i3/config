@@ -1,0 +1,178 @@
+# ---------------------------------------
+# - VARIABLES --------------------------
+set $super Mod4
+set $alt Mod1
+
+set $terminal kitty
+set $app_runner rofi -show drun
+
+set $ws1 "1:  "
+set $ws2 "2:  "
+set $ws3 "3:  "
+set $ws4 "4:  "
+set $ws5 "5:  "
+set $ws6 "6:  "
+
+set $lmon DP-2
+set $rmon DP-4
+
+set $compositor picom -b --config ~/.config/picom/picom.conf
+
+# ---------------------------------------
+# - AUTOSTART ---------------------------
+exec_always --no-startup-id ~/.screenlayout/main.sh
+exec_always --no-startup-id $compositor
+exec_always --no-startup-id autotiling
+exec_always --no-startup-id nitrogen --restore
+exec_always --no-startup-id dunst
+exec_always --no-startup-id numlockx on
+exec_always --no-startup-id xset m 1
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id /usr/lib/pam_kwallet_init
+exec --no-startup-id ssh-add -q
+exec --no-startup-id pcloud &
+exec --no-startup-id ~/.config/i3/scripts/easyeffects.sh
+
+# ---------------------------------------
+# - KEYBINDS ----------------------------
+floating_modifier $super
+
+bindsym $super+Return exec --no-startup-id $terminal
+bindsym $super+d exec --no-startup-id $app_runner
+bindsym $super+Shift+p exec --no-startup-id rofi -show power-menu -modi power-menu:rofi-power-menu
+bindsym $alt+Shift+4 exec --no-startup-id flameshot gui
+
+# kill focused window
+bindsym $super+Shift+q kill
+bindsym $alt+F4 kill
+
+# change focus
+bindsym $super+Left focus left
+bindsym $super+Down focus down
+bindsym $super+Up focus up
+bindsym $super+Right focus right
+
+# move focused window
+bindsym $super+Shift+Left move left
+bindsym $super+Shift+Down move down
+bindsym $super+Shift+Up move up
+bindsym $super+Shift+Right move right
+
+# Resizing keyboard only
+bindsym $super+control+Right resize grow width 1 px or 1 ppt
+bindsym $super+control+Left resize shrink width 1 px or 1 ppt
+bindsym $super+control+Up resize shrink height 1 px or 1 ppt
+bindsym $super+control+Down resize grow height 1 px or 1 ppt 
+
+# split in horizontal orientation
+bindsym $super+h split h
+
+# split in vertical orientation
+bindsym $super+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $super+f fullscreen toggle
+
+# change container layout split
+
+# toggle tiling / floating
+bindsym $super+space floating toggle
+bindsym $super+w layout tabbed
+bindsym $super+s layout toggle split
+
+# scratchpad
+bindsym $super+Shift+minus move scratchpad
+bindsym $super+minus scratchpad show
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $super+Shift+c restart
+
+# lock screen
+bindsym $super+l exec ~/.config/i3/scripts/lock.sh
+
+# ---------------------------------------
+# - WORKSPACES --------------------------
+
+workspace $ws1 output $lmon
+workspace $ws2 output $lmon
+workspace $ws3 output $lmon
+workspace $ws4 output $rmon
+workspace $ws5 output $rmon
+workspace $ws6 output $rmon
+
+# switch to workspace
+bindsym $alt+Control+Right workspace next
+bindsym $alt+Control+Left workspace prev
+bindsym $super+1 workspace $ws1
+bindsym $super+2 workspace $ws2
+bindsym $super+3 workspace $ws3
+bindsym $super+4 workspace $ws4
+bindsym $super+5 workspace $ws5
+bindsym $super+6 workspace $ws6
+
+# move focused container to workspace
+bindsym $super+Shift+1 move container to workspace $ws1
+bindsym $super+Shift+2 move container to workspace $ws2
+bindsym $super+Shift+3 move container to workspace $ws3
+bindsym $super+Shift+4 move container to workspace $ws4
+bindsym $super+Shift+5 move container to workspace $ws5
+bindsym $super+Shift+6 move container to workspace $ws6
+
+assign [class="firefoxdeveloperedition"] $ws1
+assign [class="thunderbird"] $ws2
+for_window [class="Spotify"] move container to workspace $ws3
+for_window [class="youtube music"] move container to workspace $ws3
+for_window [class="discord"] move container to workspace $ws3
+
+# ---------------------------------------
+# - VISUALS -----------------------------
+font pango: JetBrainsMono Nerd Font 9
+
+# Hide title bar
+default_border pixel 1
+default_floating_border pixel 1
+for_window [class="^.*"] border pixel 1
+
+# Set gaps
+gaps inner 15
+smart_gaps on
+
+# ---------------------------------------
+# - COLORS ------------------------------
+set $bg #282828
+set $red #cc241d
+set $green #98971a
+set $yellow #d79921
+set $blue #458588
+set $purple #b16286
+set $aqua #689d68
+set $gray #a89984
+set $darkgray #1d2021
+set $lightgray #bdae93
+set $white #ffffff
+
+# class                 border|backgr|text|indicator|child_border
+client.focused          $lightgray $lightgray $bg $purple $darkgray
+client.focused_inactive $darkgray $darkgray $lightgray $purple $darkgray
+client.unfocused        $darkgray $darkgray $lightgray $purple $darkgray
+client.urgent           $red $red $white $red $red
+
+# ---------------------------------------
+# - STATUS BAR --------------------------
+bar {
+    position bottom
+    status_command i3status
+    tray_output primary
+    colors {
+        # bar background color
+        background $bg
+        # text color used for blocks that do not have a color specified.
+        statusline $lightgray
+        # workspaces section            
+        #                    border  backgr. text
+        focused_workspace    $lightgray $lightgray $bg
+        inactive_workspace   $darkgray $darkgray $lightgray
+        active_workspace     $darkgray $darkgray $lightgray
+        urgent_workspace     $red $red $bg
+    }
+}
