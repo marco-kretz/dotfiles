@@ -1,0 +1,15 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 16,
+    "margin-top": 5,
+
+    "include": ["~/.config/waybar/modules.json"],
+
+    "modules-left": [
+        "custom/appmenu",
+        "wlr/taskbar",
+        "group/quicklinks",
+        "hyprland/window"
+    ]
+}
