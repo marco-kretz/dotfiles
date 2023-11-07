@@ -1,0 +1,3 @@
+unixorn/fzf-zsh-plugin
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-syntax-highlighting
