@@ -29,3 +29,6 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "120"
+
+-- Set completeopt to have a better completion experience
+vim.o.completeopt = 'menuone,noselect'
