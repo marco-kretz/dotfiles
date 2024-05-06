@@ -1,2 +1,3 @@
 #!/bin/sh
-easyeffects --gapplication-service -l "Marco" &
+easyeffects --gapplication-service -l "Marco"
+

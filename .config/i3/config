@@ -28,10 +28,13 @@ exec_always --no-startup-id dunst
 exec_always --no-startup-id numlockx on
 exec_always --no-startup-id xset m 1
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-exec --no-startup-id /usr/lib/pam_kwallet_init
+#exec --no-startup-id /usr/bin/kwalletd6
+#exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secrets,pkcs11
+exec --no-startup-id /usr/libexec/polkit-kde-authentication-agent-1
 exec --no-startup-id ssh-add -q
-exec --no-startup-id pcloud &
+exec --no-startup-id pasystray
 exec --no-startup-id ~/.config/i3/scripts/easyeffects.sh
+exec --no-startup-id flatpak run com.synology.SynologyDrive
 
 # ---------------------------------------
 # - KEYBINDS ----------------------------
@@ -77,8 +80,9 @@ bindsym $super+f fullscreen toggle
 
 # toggle tiling / floating
 bindsym $super+space floating toggle
+bindsym $super+s layout stacking
 bindsym $super+w layout tabbed
-bindsym $super+s layout toggle split
+bindsym $super+e layout toggle split
 
 # scratchpad
 bindsym $super+Shift+minus move scratchpad
@@ -118,7 +122,8 @@ bindsym $super+Shift+4 move container to workspace $ws4
 bindsym $super+Shift+5 move container to workspace $ws5
 bindsym $super+Shift+6 move container to workspace $ws6
 
-assign [class="firefoxdeveloperedition"] $ws1
+assign [class="firefox"] $ws1
+assign [class="vivaldi-stable"] $ws1
 assign [class="thunderbird"] $ws2
 for_window [class="Spotify"] move container to workspace $ws3
 for_window [class="youtube music"] move container to workspace $ws3

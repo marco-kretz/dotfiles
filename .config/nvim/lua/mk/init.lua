@@ -1,5 +1,5 @@
 require("mk.remap")
-require("mk.lazy")
+require("mk.plugins")
 require("mk.set")
 
 -- Use system clipboard
