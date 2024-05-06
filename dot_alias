@@ -1,0 +1,7 @@
+# Zypper
+alias zdup='sudo zypper dup'
+alias zse='sudo zypper se'
+alias zin='sudo zypper in'
+
+# Kitty
+alias s='kitten ssh'
