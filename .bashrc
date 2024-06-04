@@ -1,11 +1,14 @@
 # Source .alias
 test -s ~/.alias && . ~/.alias || true
+source /usr/share/bash-completion/bash_completion
+if [ ! -a ~/.inputrc ]; then echo '$include /etc/inputrc' > ~/.inputrc; fi
 
 # Init Starship
 eval "$(starship init bash)"
 
 # Set $PATH
-export PATH="$PATH:~/go/bin:/usr/local/cuda-12.4/bin"
+export PATH="$PATH:~/go/bin:~/Development/flutter/bin:~/Development/android/cmdline-tools/latest/bin"
+export ANDROID_SDK_ROOT=~/Development/android
 
 # Init NVM
 export NVM_DIR="$HOME/.nvm"
@@ -14,7 +17,8 @@ export NVM_DIR="$HOME/.nvm"
 
 # ---- FZF ---- #
 # -- Set up fzf key bindings and fuzzy completion
-eval "$(fzf --bash)"
+#eval "$(fzf --bash)"
+source /usr/share/fzf/shell/key-bindings.bash
 
 # -- Use fd instead of find for file search
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
@@ -31,7 +35,7 @@ _fzf_compgen_dir() {
 }
 
 # -- Load fzf-git
-source ~/Development/github/fzf-git.sh/fzf-git.sh
+#source ~/Development/github/fzf-git.sh/fzf-git.sh
 
 export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
