@@ -1,10 +1,12 @@
 # Source .alias
 test -s ~/.alias && . ~/.alias || true
 source /usr/share/bash-completion/bash_completion
-if [ ! -a ~/.inputrc ]; then echo '$include /etc/inputrc' > ~/.inputrc; fi
 
 # Init Starship
 eval "$(starship init bash)"
+
+# Case-insensitive completions
+bind 'set completion-ignore-case on'
 
 # Set $PATH
 #export PATH="$PATH:~/go/bin:~/Development/flutter/bin:~/Development/android/cmdline-tools/latest/bin"
