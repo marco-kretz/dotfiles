@@ -1,0 +1,30 @@
+[user]
+  name = Marco Kretz
+  email = marco@codebites.de
+
+[credential]
+  # use gnome-keyring as credential helper
+  helper = /usr/lib/git-core/git-credential-libsecret
+
+[color]
+  ui = auto
+
+[alias]
+  ci = commit
+  co = checkout
+  st = status
+  untrack = rm --cache --
+  uncommit = reset --soft HEAD~1
+  reword = commit --ammend
+  oops = commit --ammend --no-edit
+
+[core]
+  pager = cat
+  editor = code --wait
+  whitespace = -trailing-space
+
+[fetch]
+  prune = trueA
+
+[difftool "vscode"]
+  cmd = code --wait --diff $LOCAL $REMOTE
