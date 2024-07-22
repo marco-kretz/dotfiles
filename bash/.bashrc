@@ -7,8 +7,8 @@ if [ ! -a ~/.inputrc ]; then echo '$include /etc/inputrc' > ~/.inputrc; fi
 eval "$(starship init bash)"
 
 # Set $PATH
-export PATH="$PATH:~/go/bin:~/Development/flutter/bin:~/Development/android/cmdline-tools/latest/bin"
-export ANDROID_SDK_ROOT=~/Development/android
+#export PATH="$PATH:~/go/bin:~/Development/flutter/bin:~/Development/android/cmdline-tools/latest/bin"
+#export ANDROID_SDK_ROOT=~/Development/android
 
 # Init NVM
 export NVM_DIR="$HOME/.nvm"
@@ -18,7 +18,7 @@ export NVM_DIR="$HOME/.nvm"
 # ---- FZF ---- #
 # -- Set up fzf key bindings and fuzzy completion
 #eval "$(fzf --bash)"
-source /usr/share/fzf/shell/key-bindings.bash
+source /usr/share/fzf/key-bindings.bash
 
 # -- Use fd instead of find for file search
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
@@ -31,7 +31,7 @@ _fzf_compgen_path() {
 }
 
 _fzf_compgen_dir() {
-    fd --type d --hidden --exclude .git . "$1"  
+    fd --type d --hidden --exclude .git . "$1"
 }
 
 # -- Load fzf-git
@@ -57,7 +57,3 @@ export BAT_THEME=gruvbox-dark
 
 # ---- Eza (better ls) ---- #
 #alias ls="eza --color=always --long --git --icons=always --no-filesize --no-time --no-user --no-permissions"
-
-# ---- TheFuck ---- #
-eval $(thefuck --alias)
-eval $(thefuck --alias fk)

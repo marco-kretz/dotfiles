@@ -7,24 +7,32 @@
   helper = /usr/lib/git-core/git-credential-libsecret
 
 [color]
+  # Gimme colors
   ui = auto
 
 [alias]
   ci = commit
   co = checkout
   st = status
+  # Remove file from tracking but not from disk
   untrack = rm --cache --
+  # Remove last commit but keep changes staged
   uncommit = reset --soft HEAD~1
+  # Edit last commit message
   reword = commit --ammend
+  # Add staged files to last commit
   oops = commit --ammend --no-edit
 
 [core]
-  pager = cat
+  # Nice output and no paging by default
+  pager = bat
+  # Use vscode as default editor
   editor = code --wait
+  # Don't consider trailing whitespace as a merge conflict
   whitespace = -trailing-space
 
 [fetch]
-  prune = trueA
+  prune = true
 
 [difftool "vscode"]
   cmd = code --wait --diff $LOCAL $REMOTE
