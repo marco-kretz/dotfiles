@@ -9,6 +9,10 @@ Use [GNU Stow](https://www.gnu.org/software/stow/) to link the modules like so: 
 
 `sudo pacman -S stow fzf fd bat eza starship`
 
+## Tweaks
+
+-   `gsettings set org.gnome.mutter check-alive-timeout 30000` - Increase time to define an application as non-responding (esp. for games)
+
 Still in progress. More to come.
 
 ~MK
