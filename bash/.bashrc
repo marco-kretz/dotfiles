@@ -24,7 +24,7 @@ export PATH="$PATH:$GOPATH/bin"
 # ---- FZF ---- #
 # -- Set up fzf key bindings and fuzzy completion
 #eval "$(fzf --bash)"
-source /usr/share/fzf/key-bindings.bash
+source /usr/share/fzf/shell/key-bindings.bash
 
 # -- Use fd instead of find for file search
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
