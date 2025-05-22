@@ -44,7 +44,8 @@ bindkey '^[[H' beginning-of-line   # Home (alternate)
 bindkey '^[[F' end-of-line         # End (alternate)
 
 # PATH management
-export PATH="$HOME/.local/bin:$HOME/.config/composer/vendor/bin:$PATH"
+export PATH="$HOME/.symfony5/bin:$HOME/.local/bin:$HOME/.config/composer/vendor/bin:$PATH"
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gcr/ssh"
 
 # Terminal settings
 export TERM="xterm-256color"
@@ -54,8 +55,8 @@ export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
 # Load FZF
-if [[ -f /usr/share/fzf/shell/key-bindings.zsh ]]; then
-    source /usr/share/fzf/shell/key-bindings.zsh
+if [[ -f /usr/share/fzf/completion.zsh ]]; then
+    source /usr/share/fzf/completion.zsh
 fi
 
 # Preview file content using bat (https://github.com/sharkdp/bat)
@@ -67,3 +68,6 @@ export FZF_CTRL_T_OPTS="
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Cursor workaround
+alias cursor='env XDG_DATA_DIRS=/usr/share:/usr/local/share cursor'
