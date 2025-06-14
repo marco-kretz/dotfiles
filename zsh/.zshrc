@@ -9,6 +9,16 @@ HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 
+# Enable new zypper media backend
+export ZYPP_MEDIANETWORK=1
+export ZYPP_PCK_PRELOAD=1
+export ZYPP_CURL2=1
+
+# Enable gnome-keyring SSH agent
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/keyring/ssh"
+fi
+
 # Prompt cusomization with Starship
 eval "$(starship init zsh)"
 
@@ -23,11 +33,14 @@ fi
 source ${zsh_plugins}.zsh
 
 # Aliases
-alias ls='ls -la'
+alias ls='ls -la --color=auto'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias grep='grep --color=auto'
 alias vim='nvim'
+alias zin='sudo zypper in'
+alias zse='zypper se'
+alias zdup='sudo zypper dup'
 
 # Enable completions
 autoload -Uz compinit
@@ -45,7 +58,6 @@ bindkey '^[[F' end-of-line         # End (alternate)
 
 # PATH management
 export PATH="$HOME/.symfony5/bin:$HOME/.local/bin:$HOME/.config/composer/vendor/bin:$PATH"
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gcr/ssh"
 
 # Terminal settings
 export TERM="xterm-256color"
@@ -56,7 +68,10 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 
 # Load FZF
 if [[ -f /usr/share/fzf/completion.zsh ]]; then
-    source /usr/share/fzf/completion.zsh
+    /usr/share/fzf/shell/completion.zsh
+fi
+if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
+    /usr/share/fzf/shell/key-bindings.zsh
 fi
 
 # Preview file content using bat (https://github.com/sharkdp/bat)
@@ -65,9 +80,7 @@ export FZF_CTRL_T_OPTS="
   --preview 'bat -n --color=always {}'
   --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# Cursor workaround
-alias cursor='env XDG_DATA_DIRS=/usr/share:/usr/local/share cursor'

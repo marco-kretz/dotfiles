@@ -4,7 +4,7 @@
 
 [credential]
   # use gnome-keyring as credential helper
-  helper = /usr/lib/git-core/git-credential-libsecret
+  #helper = /usr/lib/git-core/git-credential-libsecret
 
 [color]
   # Gimme colors
@@ -36,3 +36,5 @@
 
 [difftool "vscode"]
   cmd = code --wait --diff $LOCAL $REMOTE
+[init]
+	defaultBranch = main
