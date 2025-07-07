@@ -1,0 +1,47 @@
+font=Noto Sans 11
+background-color=#2d2a2e
+text-color=#fcfcfa
+
+# General layout
+padding=10
+margin=5,10,0,0
+anchor=top-center
+border-size=2
+border-radius=7
+width=300
+max-visible=5
+sort=+time
+
+# Default border color
+border-color=#939293
+
+# Actions
+default-timeout=5000
+on-button-left=dismiss
+on-button-right=dismiss-all
+
+# Use a dimmer style for low-priority notifications.
+[urgency=low]
+text-color=#c1c0c0
+border-color=#727072
+default-timeout=3000
+
+# Use a cyan accent for normal-priority notifications.
+[urgency=normal]
+border-color=#78dce8
+default-timeout=5000
+
+# Use a pink/red accent for high-priority notifications and make them sticky.
+[urgency=high]
+border-color=#ff6188
+font=monospace bold 10
+default-timeout=0
+
+# --- App/Criteria-specific styles ---
+# You can add styles for specific applications or based on notification content.
+# Here are some examples using the other accent colors from your palette.
+
+# Style for grouped notifications (e.g., multiple messages from a chat app)
+[grouped]
+border-color=#ab9df2
+

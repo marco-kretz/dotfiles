@@ -9,15 +9,10 @@ HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 
-# Enable new zypper media backend
-export ZYPP_MEDIANETWORK=1
-export ZYPP_PCK_PRELOAD=1
-export ZYPP_CURL2=1
-
 # Enable gnome-keyring SSH agent
-if [ -z "$SSH_AUTH_SOCK" ]; then
-    export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/keyring/ssh"
-fi
+#if [ -z "$SSH_AUTH_SOCK" ]; then
+#    export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/keyring/ssh"
+#fi
 
 # Prompt cusomization with Starship
 eval "$(starship init zsh)"
@@ -37,10 +32,7 @@ alias ls='ls -la --color=auto'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias grep='grep --color=auto'
-alias vim='nvim'
-alias zin='sudo zypper in'
-alias zse='zypper se'
-alias zdup='sudo zypper dup'
+alias gemini-cli='npx https://github.com/google-gemini/gemini-cli'
 
 # Enable completions
 autoload -Uz compinit
@@ -68,10 +60,10 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 
 # Load FZF
 if [[ -f /usr/share/fzf/completion.zsh ]]; then
-    /usr/share/fzf/shell/completion.zsh
+    source /usr/share/fzf/completion.zsh
 fi
 if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
-    /usr/share/fzf/shell/key-bindings.zsh
+    source /usr/share/fzf/key-bindings.zsh
 fi
 
 # Preview file content using bat (https://github.com/sharkdp/bat)
