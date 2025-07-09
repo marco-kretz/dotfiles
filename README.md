@@ -9,7 +9,11 @@ Use [chezmoi](https://www.chezmoi.io/) to copy the configs to their correct dest
 
 ## Deps
 
-`sudo pacman -S zsh chezmoi fzf fd bat eza starship`
+Install required packages:
+- `sudo pacman -S zsh chezmoi fzf fd bat eza starship`
+
+Install antidote for zsh plugins:
+- `git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote`
 
 ## Init
 
