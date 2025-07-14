@@ -4,7 +4,7 @@
     border: none;
     border-radius: 0;
     font-family: JetBrainsMono Nerd Font, sans-serif;
-    font-size: 15px;
+    font-size: 14px;
     min-height: 16px;
 }
 
@@ -76,7 +76,8 @@ window#waybar.hidden {
 #custom-weather.rainyNight,
 #custom-weather.showyIcyDay,
 #custom-weather.snowyIcyNight,
-#custom-weather.default {
+#custom-weather.default,
+#custom-mediaplayer {
     background-color: @background;
     border-radius: 7px;
     padding: 5px 7px;  /* Adjusted padding */

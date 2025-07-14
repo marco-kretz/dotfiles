@@ -23,7 +23,7 @@
         "temperature",
         //"idle_inhibitor",
         //"mpd"
-        "custom/spotify"
+        "custom/mediaplayer"
     ],
     "modules-center": [
         //"hyprland/window"
@@ -186,17 +186,8 @@
         "min-length": 3
     },
 
-"custom/spotify": {
-    "exec": "~/.config/waybar/mediaplayer.py --player spotify",
-    "format": "{}  ",
-    "return-type": "json",
-    "on-click": "playerctl play-pause",
-    "on-scroll-up": "playerctl next",
-    "on-scroll-down": "playerctl previous"
-},
-
-    "custom/media": {
-        "format": "{0} {1}",
+    "custom/mediaplayer": {
+        "format": "{icon} {text}",
         "return-type": "json",
         "max-length": 40,
         "format-icons": {
@@ -204,8 +195,7 @@
             "default": "🎜"
         },
         "escape": true,
-        //"exec": "~/.config/waybar/mediaplayer.py" // Script in resources folder
-        // "exec": "~/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
+        "exec": "$HOME/.config/waybar/modules/mediaplayer.py 2> /dev/null"
     },
 
     "custom/power": {
