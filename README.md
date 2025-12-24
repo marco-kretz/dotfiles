@@ -43,7 +43,7 @@ input {
 ### Sysctl
 
 ```CONF
-# Virtual Memory Tweaks for 64GB RAM
+# Virtual Memory Tweaks for 64GB RAM (!)
 # Force data to write to disk sooner to prevent massive "stop-the-world" flushes
 vm.dirty_bytes = 268435456
 vm.dirty_background_bytes = 134217728
