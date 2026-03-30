@@ -26,7 +26,7 @@ $time\
 [ ](fg:color_bg1)\
 $line_break$character"""
 
-palette = 'monokai_dark_gogh'
+palette = 'monokai_pro'
 
 [palettes.gruvbox_dark]
 color_fg0 = '#fbf1c7'
@@ -40,14 +40,14 @@ color_purple = '#b16286'
 color_red = '#cc241d'
 color_yellow = '#d79921'
 
-[palettes.monokai_dark_gogh]
+[palettes.monokai_pro]
 color_fg0 = '#f8f8f2'
-color_bg0 = '#272822'
-color_bg1 = '#3c3836'
-color_bg3 = '#75715e'
-color_blue = '#66d9ef'
-color_aqua = '#2aa198'
-color_green = '#a6e22e'
+color_bg0 = '#2d2a2e'
+color_bg1 = '#403e41'
+color_bg3 = '#5b595c'
+color_blue = '#78dce8'
+color_aqua = '#a9dc76'
+color_green = '#a9dc76'
 color_orange = '#fc9867'
 color_purple = '#ab9df2'
 color_red = '#ff6188'
@@ -73,6 +73,7 @@ Amazon = ""
 Android = ""
 Arch = "󰣇"
 Artix = "󰣇"
+CachyOS = "󰣇"
 CentOS = ""
 Debian = "󰣚"
 Redhat = "󱄛"
@@ -157,7 +158,7 @@ format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_blue)]($style)'
 [docker_context]
 symbol = ""
 style = "bg:color_bg3"
-format = '[[ $symbol( $context) ](fg:#83a598 bg:color_bg3)]($style)'
+format = '[[ $symbol( $context) ](fg:color_blue bg:color_bg3)]($style)'
 
 [time]
 disabled = false
