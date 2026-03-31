@@ -10,11 +10,11 @@ These are the dotfiles I use on my linux-machines. Feel free to use, share or wh
 
 Install required packages:
 
--   `sudo pacman -S zsh stow fzf fd bat eza starship`
+- `sudo pacman -S zsh stow fzf fd bat eza starship`
 
 Install antidote for zsh plugins:
 
--   `git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote`
+- `git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote`
 
 ## General tweaks
 
@@ -61,49 +61,14 @@ net.core.default_qdisc = cake
 net.ipv4.tcp_congestion_control = bbr
 ```
 
-### KDE Plasma (not using right now)
+### KDE Plasma
 
 #### Auto unlock SSH key
 
-1. `stow -t ~ kde_ssh` - Makes sure to set the correct env vars
-2. Create two user systemd service files:
-
-    ```BASH
-    # ~/config/systemd/user/ssh-agent.service
-
-    [Unit]
-    Description=SSH key agent
-    Before=default.target
-
-    [Service]
-    Type=simple
-    Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
-    ExecStart=/usr/bin/ssh-agent -D -a $SSH_AUTH_SOCK
-
-    [Install]
-    WantedBy=default.target
-    ```
-
-    ```BASH
-    # ~/config/systemd/user/ssh-add.service
-
-    [Unit]
-    Description=Add default SSH key to agent
-    After=ssh-agent.service
-    Requires=ssh-agent.service
-
-    [Service]
-    Type=oneshot
-    Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
-    ExecStart=/usr/bin/ssh-add ~/.ssh/id_rsa
-    RemainAfterExit=yes
-
-    [Install]
-    WantedBy=default.target
-    ```
-
-3. Let systemd detect the new services: `systemctl daemon-reload`
-4. Start the services: `systemctl enable --user  --now ssh-agent.service && systemctl enable --user --now ssh-add.service`
+1. `sudo pacman -S ksshaskpass openssh`
+2. `stow -t ~ kde_ssh`
+3. `systemctl enable --user ssh-agent`
+4. Correct env vars are available after relog.
 
 ### GNOME (not using right now)
 
@@ -111,16 +76,16 @@ net.ipv4.tcp_congestion_control = bbr
 
 This increases the grace period for GNOME thinking that a window has crashed. Most useful for some games.
 
--   `gsettings set org.gnome.mutter check-alive-timeout 30000`
+- `gsettings set org.gnome.mutter check-alive-timeout 30000`
 
 Resize windows by holding down right mouse button
 
--   `gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true`
+- `gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true`
 
 #### Auto unlock SSH keys
 
 Make sure GNOME's GCR ssh-agent wrapper is running:
 
--   `systemctl enable --now --user gcr-ssh-agent.service`
+- `systemctl enable --now --user gcr-ssh-agent.service`
 
 ~MK
