@@ -1,11 +1,19 @@
 # Set ZSH options
-setopt autocd          # cd to directory by typing its name
-setopt correct         # suggest corrections for command typos
-setopt histignoredups  # omit consecutive duplicate history lines
-setopt sharehistory    # share and incrementally append history across sessions
+setopt autocd            # cd to directory by typing its name
+setopt correct           # suggest corrections for command typos
+setopt histignoredups    # omit consecutive duplicate history lines
+setopt sharehistory      # share and incrementally append history across sessions
+setopt hist_verify       # expand history line into buffer for editing before run
+setopt hist_reduce_blanks
+setopt extended_history  # ': timestamp:elapsed;command' in HISTFILE
+setopt hist_ignore_space # leading space: do not save (good for secrets / one-offs)
+setopt noclobber         # refuse '>' overwrite; use >| to force
 
-# History config
-HISTFILE=~/.zsh_history
+# History config (XDG state)
+_histr="${XDG_STATE_HOME:-$HOME/.local/state}/zsh"
+[[ -d $_histr ]] || mkdir -p "$_histr"
+HISTFILE=$_histr/history
+unset _histr
 HISTSIZE=10000
 SAVEHIST=10000
 
@@ -47,8 +55,9 @@ alias ls='ls -la --color=auto'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias grep='grep --color=auto'
-alias gemini-cli='npx https://github.com/google-gemini/gemini-cli'
-alias icat='kitty +kitten icat'
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -I'
 
 # Prompt (after plugins so nothing overrides it)
 eval "$(starship init zsh)"
@@ -59,6 +68,8 @@ if [[ -z $TERM || $TERM == dumb ]]; then
 fi
 
 # FZF
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+
 if [[ -f /usr/share/fzf/shell/completion.zsh ]]; then
   source /usr/share/fzf/shell/completion.zsh
 fi
@@ -66,19 +77,16 @@ if [[ -f /usr/share/fzf/shell/key-bindings.zsh ]]; then
   source /usr/share/fzf/shell/key-bindings.zsh
 fi
 
-export FZF_CTRL_T_OPTS=$'--walker-skip .git,node_modules,target\n--preview \'bat -n --color=always {}\'\n--bind \'ctrl-/:change-preview-window(down|hidden|)\''
-
-# Lazy-load nvm (sourcing nvm every shell costs hundreds of ms)
-if [[ -r /usr/share/nvm/init-nvm.sh ]]; then
-  _load_nvm() {
-    unset -f _load_nvm nvm node npm npx
-    source /usr/share/nvm/init-nvm.sh
-  }
-  nvm() { _load_nvm && nvm "$@" }
-  node() { _load_nvm && command node "$@" }
-  npm() { _load_nvm && command npm "$@" }
-  npx() { _load_nvm && command npx "$@" }
+if command -v bat >/dev/null 2>&1; then
+  _fzf_prev='bat -n --color=always {}'
+else
+  _fzf_prev='cat {}'
 fi
+export FZF_CTRL_T_OPTS=$'--walker-skip .git,node_modules,target\n--preview '\'$_fzf_prev$'\'\n--bind \'ctrl-/:change-preview-window(down|hidden|)\''
+unset _fzf_prev
+
+# nvm (Arch package ships /usr/share/nvm/init-nvm.sh)
+[[ -r /usr/share/nvm/init-nvm.sh ]] && source /usr/share/nvm/init-nvm.sh
 
 # Enable gnome-keyring SSH agent
 # if [ -z "$SSH_AUTH_SOCK" ]; then
