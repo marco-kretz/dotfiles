@@ -5,34 +5,17 @@ description: Use the GitHub CLI (`gh`) for GitHub interactions such as reading i
 
 # GitHub CLI via gh
 
-Use this skill when interacting with GitHub from the terminal is the most direct and reliable option.
-
-## Purpose
-
-This skill tells the agent to use `gh` for GitHub-related work such as:
-- reading issues
-- reading and reviewing pull requests
-- creating pull requests
-- commenting on issues or PRs
-- checking workflow runs
-- viewing releases
-- inspecting repository metadata
-- browsing GitHub objects tied to the current repository
-
-Prefer `gh` over hand-written GitHub API requests when the needed operation is supported cleanly by the CLI.
+Use this skill for GitHub operations where `gh` is the clearest interface.
 
 ## When to use
 
-Use this skill when the task involves GitHub state, for example:
-- "show me issue 123"
-- "list open PRs"
-- "create a PR"
-- "comment on this issue"
-- "check why CI failed"
-- "show recent workflow runs"
-- "open the PR in browser"
-- "list releases"
-- "see what branch this PR targets"
+Use for GitHub state and metadata, such as:
+- viewing issues or PRs
+- creating PRs
+- commenting on issues or PRs
+- checking workflow runs or CI failures
+- viewing releases
+- inspecting repository metadata
 
 ## When not to use
 
@@ -42,22 +25,20 @@ Do not use this skill when:
 - the user only wants source code inspection and no GitHub metadata
 - the task would perform destructive or high-impact remote actions without explicit user intent
 
-## Core rules
+## Rules
 
 - Prefer `gh` for GitHub operations instead of manual API calls.
 - Prefer read-only commands first unless the user clearly asked to create, edit, merge, close, or delete something.
-- Use the current git remote and repo context when available.
-- If repo context is unclear, determine it before acting.
+- Establish the correct repo before acting; use the current repo when appropriate, a provided URL when available, or `--repo owner/name` when targeting another repository.
 - Do not guess issue numbers, PR numbers, repo names, or branch names.
-- For write operations, make sure the intended target is clearly identified before executing.
+- For remote write actions such as commenting, editing, merging, closing, reopening, deleting, or rerunning workflows, verify the exact target before executing unless the user was already explicit.
+- Prefer `--json` and `--jq` for reliable summaries or filtering.
+- Use `gh api` only when the standard `gh` subcommand does not expose the needed operation cleanly.
 - Summarize what was read or changed after using `gh`.
 
-## Preconditions
+## Workflow
 
-Before using `gh`:
-1. Check that `gh` is installed.
-2. Check authentication status if the task requires API access.
-3. Confirm the current repository context when relevant.
+Before using `gh`, ensure it is installed, authenticated if needed, and pointed at the correct repository.
 
 Useful checks:
 ```bash
@@ -65,3 +46,14 @@ gh --version
 gh auth status
 git remote -v
 gh repo view
+```
+
+## Common examples
+
+```bash
+gh issue view 123
+gh pr view 123 --json title,author,baseRefName,headRefName,url
+gh pr checks 123
+gh run list
+gh pr create
+```
