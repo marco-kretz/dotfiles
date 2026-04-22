@@ -61,7 +61,7 @@ for skill_path in "$SRC"/*/; do
   # Only link directories that actually contain a SKILL.md
   if [[ ! -f "$skill_path/SKILL.md" ]]; then
     echo "⚠ $name: no SKILL.md — skipped"
-    ((skipped++))
+    (( ++skipped ))
     continue
   fi
 
@@ -69,20 +69,20 @@ for skill_path in "$SRC"/*/; do
     # Existing symlink — already pointing to the right place?
     current="$(readlink "$target")"
     if [[ "$current" == "${skill_path%/}" ]]; then
-      ((skipped++))
+      (( ++skipped ))
       continue
     fi
     echo "↻ $name: symlink points to $current, re-linking"
     run rm "$target"
   elif [[ -e "$target" ]]; then
     echo "✗ $name: real file/directory exists at $target — skipped"
-    ((skipped++))
+    (( ++skipped ))
     continue
   fi
 
   run ln -s "${skill_path%/}" "$target"
   echo "✓ $name linked"
-  ((linked++))
+  (( ++linked ))
 done
 
 # Prune dead symlinks
@@ -92,7 +92,7 @@ if [[ $PRUNE -eq 1 ]]; then
     if [[ ! -e "$link" ]]; then
       echo "✗ $(basename "$link"): dead symlink removed"
       run rm "$link"
-      ((pruned++))
+      (( ++pruned ))
     fi
   done
 fi
