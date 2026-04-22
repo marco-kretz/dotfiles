@@ -1,5 +1,9 @@
 {
-  "model": "claude-opus-4-6[1M]",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "model": "opusplan",
   "statusLine": {
     "type": "command",
     "command": "bash /home/marco/.claude/statusline-command.sh"
@@ -18,9 +22,5 @@
     "enabled": true,
     "mode": "tap"
   },
-  "voiceEnabled": true,
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  }
+  "voiceEnabled": true
 }
