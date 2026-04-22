@@ -18,5 +18,9 @@
     "enabled": true,
     "mode": "tap"
   },
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
 }
