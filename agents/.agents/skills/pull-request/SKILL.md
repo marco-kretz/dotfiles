@@ -10,6 +10,35 @@ description: >-
   or GitLab, explaining what a branch changes, or preparing a patch for review.
 ---
 
+# Workflow
+
+Before drafting the PR description, gather context:
+
+```bash
+git status
+git log --oneline main...HEAD
+git diff main...HEAD
+```
+
+If the branch has no upstream, push it first:
+
+```bash
+git push -u origin HEAD
+```
+
+Then create the PR using the description format below:
+
+```bash
+gh pr create --title "<title>" --body "$(cat <<'EOF'
+<description>
+EOF
+)"
+```
+
+Return the PR URL when done.
+
+---
+
 # Pull Request Format
 
 When creating a pull request or describing code changes for review, always

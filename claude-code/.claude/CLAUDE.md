@@ -1,0 +1,1 @@
+/home/marco/.config/opencode/AGENTS.md
