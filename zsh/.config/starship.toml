@@ -1,180 +1,32 @@
-"$schema" = 'https://starship.rs/config-schema.json'
-
-format = """
-[](color_red)\
-$os\
-$username\
-[](bg:color_yellow fg:color_red)\
-$directory\
-[](fg:color_yellow bg:color_aqua)\
-$git_branch\
-$git_status\
-[](fg:color_aqua bg:color_blue)\
-$c\
-$rust\
-$golang\
-$nodejs\
-$php\
-$java\
-$kotlin\
-$haskell\
-$python\
-[](fg:color_blue bg:color_bg3)\
-$docker_context\
-[](fg:color_bg3 bg:color_bg1)\
-$time\
-[ ](fg:color_bg1)\
-$line_break$character"""
-
-palette = 'monokai_pro'
-
-[palettes.gruvbox_dark]
-color_fg0 = '#fbf1c7'
-color_bg1 = '#3c3836'
-color_bg3 = '#665c54'
-color_blue = '#458588'
-color_aqua = '#689d6a'
-color_green = '#98971a'
-color_orange = '#d65d0e'
-color_purple = '#b16286'
-color_red = '#cc241d'
-color_yellow = '#d79921'
-
-[palettes.monokai_pro]
-color_fg0 = '#f8f8f2'
-color_bg0 = '#2d2a2e'
-color_bg1 = '#403e41'
-color_bg3 = '#5b595c'
-color_blue = '#78dce8'
-color_aqua = '#a9dc76'
-color_green = '#a9dc76'
-color_orange = '#fc9867'
-color_purple = '#ab9df2'
-color_red = '#ff6188'
-color_yellow = '#ffd866'
-
-[os]
-disabled = false
-style = "bg:color_red fg:color_bg0"
-
-[os.symbols]
-Windows = "󰍲"
-Ubuntu = "󰕈"
-SUSE = ""
-Raspbian = "󰐿"
-Mint = "󰣭"
-Macos = "󰀵"
-Manjaro = ""
-Linux = "󰌽"
-Gentoo = "󰣨"
-Fedora = "󰣛"
-Alpine = ""
-Amazon = ""
-Android = ""
-Arch = "󰣇"
-Artix = "󰣇"
-CachyOS = "󰣇"
-CentOS = ""
-Debian = "󰣚"
-Redhat = "󱄛"
-RedHatEnterprise = "󱄛"
-
-[username]
-show_always = false
-style_user = "bg:color_red fg:color_bg0"
-style_root = "bg:color_red fg:color_bg0"
-format = '[ $user ]($style)'
-
-[directory]
-style = "fg:color_bg0 bg:color_yellow"
-format = "[ $path ]($style)"
-truncation_length = 3
-truncation_symbol = "…/"
-
-[directory.substitutions]
-"Documents" = "󰈙 "
-"Downloads" = " "
-"Music" = "󰝚 "
-"Pictures" = " "
-"CODE" = "󰲋 "
-
-[git_branch]
-symbol = ""
-style = "bg:color_aqua"
-format = '[[ $symbol $branch ](fg:color_fg0 bg:color_aqua)]($style)'
-
-[git_status]
-style = "bg:color_aqua"
-format = '[[($all_status$ahead_behind )](fg:color_fg0 bg:color_aqua)]($style)'
-
-[nodejs]
-detect_extensions = []
-symbol = ""
-style = "bg:color_blue"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_blue)]($style)'
-
-[c]
-symbol = " "
-style = "bg:color_blue"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_blue)]($style)'
-
-[rust]
-symbol = ""
-style = "bg:color_blue"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_blue)]($style)'
-
-[golang]
-symbol = ""
-style = "bg:color_blue"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_blue)]($style)'
-
-[php]
-symbol = ""
-style = "bg:color_blue"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_blue)]($style)'
-
-[java]
-symbol = " "
-style = "bg:color_blue"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_blue)]($style)'
-
-[kotlin]
-symbol = ""
-style = "bg:color_blue"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_blue)]($style)'
-
-[haskell]
-symbol = ""
-style = "bg:color_blue"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_blue)]($style)'
-
-[python]
-pyenv_version_name = true
-detect_extensions = []
-symbol = ""
-style = "bg:color_blue"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_blue)]($style)'
-
-[docker_context]
-symbol = ""
-style = "bg:color_bg3"
-format = '[[ $symbol( $context) ](fg:color_blue bg:color_bg3)]($style)'
-
-[time]
-disabled = false
-time_format = "%R"
-style = "bg:color_bg1"
-format = '[[  $time ](fg:color_fg0 bg:color_bg1)]($style)'
-
-[line_break]
-disabled = false
+add_newline = true
+command_timeout = 200
+format = "[$directory$git_branch$git_status]($style)$character"
 
 [character]
-disabled = false
-success_symbol = '[](bold fg:color_green)'
-error_symbol = '[](bold fg:color_red)'
-vimcmd_symbol = '[](bold fg:color_green)'
-vimcmd_replace_one_symbol = '[](bold fg:color_purple)'
-vimcmd_replace_symbol = '[](bold fg:color_purple)'
-vimcmd_visual_symbol = '[](bold fg:color_yellow)'
+error_symbol = "[✗](bold cyan)"
+success_symbol = "[❯](bold cyan)"
 
+[directory]
+truncation_length = 2
+truncation_symbol = "…/"
+repo_root_style = "bold cyan"
+repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
+
+[git_branch]
+format = "[$branch]($style) "
+style = "italic cyan"
+
+[git_status]
+format     = '[$all_status]($style)'
+style      = "cyan"
+ahead      = "⇡${count} "
+diverged   = "⇕⇡${ahead_count}⇣${behind_count} "
+behind     = "⇣${count} "
+conflicted = " "
+up_to_date = " "
+untracked  = "? "
+modified   = " "
+stashed    = ""
+staged     = ""
+renamed    = ""
+deleted    = ""

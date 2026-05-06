@@ -20,15 +20,21 @@ SAVEHIST=10000
 # PATH (early so plugin hooks resolve commands)
 export PATH="$HOME/.symfony5/bin:$HOME/.local/bin:$HOME/.config/composer/vendor/bin:$PATH"
 
-# Antidote plugin manager
-zsh_plugins=${ZDOTDIR:-$HOME}/.zsh_plugins
-if [[ ! ${zsh_plugins}.zsh -nt ${zsh_plugins}.txt ]]; then
-  (
-    source ~/.antidote/antidote.zsh
-    antidote bundle <${zsh_plugins}.txt >${zsh_plugins}.zsh
-  )
+# Omarchy shell base — portable guard so this .zshrc works on non-Omarchy machines too
+[[ -f /usr/share/omarchy-zsh/shell/zoptions ]] && source /usr/share/omarchy-zsh/shell/zoptions
+[[ -f /usr/share/omarchy-zsh/shell/all ]] && source /usr/share/omarchy-zsh/shell/all
+
+# Antidote plugin manager (only active when installed)
+if [[ -d ~/.antidote ]]; then
+  zsh_plugins=${ZDOTDIR:-$HOME}/.zsh_plugins
+  if [[ ! ${zsh_plugins}.zsh -nt ${zsh_plugins}.txt ]]; then
+    (
+      source ~/.antidote/antidote.zsh
+      antidote bundle <${zsh_plugins}.txt >${zsh_plugins}.zsh
+    )
+  fi
+  source ${zsh_plugins}.zsh
 fi
-source ${zsh_plugins}.zsh
 
 # Completions (after plugins extend $fpath); -C skips slow security audit when dump exists
 autoload -Uz compinit
@@ -43,12 +49,15 @@ fi
 # Case-insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
-# Key bindings for Home, End, Delete
+# Key bindings for Home, End, Delete, and navigation
 bindkey '^[[1~' beginning-of-line
 bindkey '^[[4~' end-of-line
 bindkey '^[[3~' delete-char
-bindkey '^[[H' beginning-of-line
-bindkey '^[[F' end-of-line
+bindkey '^[[H'  beginning-of-line
+bindkey '^[[F'  end-of-line
+bindkey '^[[5~' beginning-of-buffer-or-history  # Page Up
+bindkey '^[[6~' end-of-buffer-or-history         # Page Down
+bindkey '^[[Z'  reverse-menu-complete            # Shift-Tab
 
 # Aliases
 alias ls='ls -la --color=auto'
@@ -59,8 +68,8 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -I'
 
-# Prompt (after plugins so nothing overrides it)
-eval "$(starship init zsh)"
+# Prompt — skip if Omarchy already initialized starship via its inits
+[[ -z "$STARSHIP_SESSION_KEY" ]] && command -v starship >/dev/null && eval "$(starship init zsh)"
 
 # Terminal: do not override a sensible TERM from the emulator (e.g. xterm-kitty)
 if [[ -z $TERM || $TERM == dumb ]]; then
@@ -87,6 +96,9 @@ unset _fzf_prev
 
 # nvm (Arch package ships /usr/share/nvm/init-nvm.sh)
 [[ -r /usr/share/nvm/init-nvm.sh ]] && source /usr/share/nvm/init-nvm.sh
+
+# Force portable TERM over SSH — Ghostty's ssh-env misses tmux/nested sessions
+ssh() { TERM=xterm-256color command ssh "$@" }
 
 # Enable gnome-keyring SSH agent
 # if [ -z "$SSH_AUTH_SOCK" ]; then
