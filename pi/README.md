@@ -90,7 +90,6 @@ Toggle it per session:
 /advisor on           # enable
 /advisor off          # disable
 /advisor status       # show status
-/advidsor             # typo alias, also toggles
 ```
 
 ## Install on a new machine

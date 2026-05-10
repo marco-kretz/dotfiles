@@ -256,7 +256,7 @@ export default function (pi: ExtensionAPI) {
 		if (saved !== undefined) setAdvisorEnabled(saved);
 	}
 
-	function registerAdvisorToggleCommand(name: "advisor" | "advidsor"): void {
+	function registerAdvisorToggleCommand(name: "advisor"): void {
 		pi.registerCommand(name, {
 			description: "Toggle the consult_advisor tool: /advisor [on|off|status]",
 			handler: async (args, ctx) => {
@@ -371,7 +371,6 @@ export default function (pi: ExtensionAPI) {
 	});
 
 	registerAdvisorToggleCommand("advisor");
-	registerAdvisorToggleCommand("advidsor");
 
 	pi.on("session_start", (_event, ctx) => {
 		restoreAdvisorToggle(ctx);
