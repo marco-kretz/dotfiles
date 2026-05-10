@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { basename, join, resolve } from "node:path";
 import { Type } from "typebox";
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 
 type AdvisorSettings = {
 	provider: string;
@@ -25,10 +25,16 @@ type JsonEvent = {
 	isError?: boolean;
 };
 
+const ADVISOR_TOOL_NAME = "consult_advisor";
+const ADVISOR_TOGGLE_ENTRY = "advisor-toggle";
 const DEFAULT_ADVISOR_PROVIDER = "openai-codex";
 const DEFAULT_ADVISOR_MODEL = "gpt-5.5";
 const DEFAULT_ADVISOR_THINKING = "xhigh";
 const DEFAULT_MAX_OUTPUT_CHARS = 24_000;
+
+type AdvisorToggleState = {
+	enabled: boolean;
+};
 
 function getConfigDir(): string {
 	return process.env.PI_CODING_AGENT_DIR || join(homedir(), ".pi", "agent");
@@ -220,8 +226,67 @@ function runPiJson(args: string[], cwd: string, signal?: AbortSignal): Promise<{
 }
 
 export default function (pi: ExtensionAPI) {
+	function isAdvisorEnabled(): boolean {
+		return pi.getActiveTools().includes(ADVISOR_TOOL_NAME);
+	}
+
+	function setAdvisorEnabled(enabled: boolean): void {
+		const activeTools = new Set(pi.getActiveTools());
+		if (enabled) {
+			activeTools.add(ADVISOR_TOOL_NAME);
+		} else {
+			activeTools.delete(ADVISOR_TOOL_NAME);
+		}
+		pi.setActiveTools(Array.from(activeTools));
+	}
+
+	function persistAdvisorToggle(enabled: boolean): void {
+		pi.appendEntry<AdvisorToggleState>(ADVISOR_TOGGLE_ENTRY, { enabled });
+	}
+
+	function restoreAdvisorToggle(ctx: ExtensionContext): void {
+		const branchEntries = ctx.sessionManager.getBranch();
+		let saved: boolean | undefined;
+		for (const entry of branchEntries) {
+			if (entry.type === "custom" && entry.customType === ADVISOR_TOGGLE_ENTRY) {
+				const data = entry.data as AdvisorToggleState | undefined;
+				if (typeof data?.enabled === "boolean") saved = data.enabled;
+			}
+		}
+		if (saved !== undefined) setAdvisorEnabled(saved);
+	}
+
+	function registerAdvisorToggleCommand(name: "advisor" | "advidsor"): void {
+		pi.registerCommand(name, {
+			description: "Toggle the consult_advisor tool: /advisor [on|off|status]",
+			handler: async (args, ctx) => {
+				const action = args.trim().toLowerCase();
+				if (["status", "s"].includes(action)) {
+					ctx.ui.notify(`Advisor is ${isAdvisorEnabled() ? "enabled" : "disabled"}.`, "info");
+					return;
+				}
+
+				let enabled: boolean;
+				if (["on", "enable", "enabled", "1", "true"].includes(action)) {
+					enabled = true;
+				} else if (["off", "disable", "disabled", "0", "false"].includes(action)) {
+					enabled = false;
+				} else if (!action) {
+					enabled = !isAdvisorEnabled();
+				} else {
+					ctx.ui.notify("Usage: /advisor [on|off|status]", "warning");
+					return;
+				}
+
+				setAdvisorEnabled(enabled);
+				persistAdvisorToggle(enabled);
+				ctx.ui.notify(`Advisor ${enabled ? "enabled" : "disabled"}.`, enabled ? "success" : "info");
+			},
+		});
+	}
+
 	pi.registerTool({
-		name: "consult_advisor",
+		name: ADVISOR_TOOL_NAME,
 		label: "advisor",
 		description:
 			"Consult a high-reasoning read-only advisor sub-agent for deeper reasoning, design critique, debugging strategy, risk analysis, or second opinions. Use when the current model may need stronger reasoning, independent review, or is unsure/in doubt.",
@@ -303,5 +368,16 @@ export default function (pi: ExtensionAPI) {
 				},
 			};
 		},
+	});
+
+	registerAdvisorToggleCommand("advisor");
+	registerAdvisorToggleCommand("advidsor");
+
+	pi.on("session_start", (_event, ctx) => {
+		restoreAdvisorToggle(ctx);
+	});
+
+	pi.on("session_tree", (_event, ctx) => {
+		restoreAdvisorToggle(ctx);
 	});
 }

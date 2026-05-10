@@ -83,6 +83,16 @@ PI_ADVISOR_THINKING=xhigh
 
 The advisor gets only read-only tools (`read`, `grep`, `find`, `ls`) and outputs compact Markdown: recommendation, reasoning, risks, checks, open questions, and confidence.
 
+Toggle it per session:
+
+```text
+/advisor              # toggle on/off
+/advisor on           # enable
+/advisor off          # disable
+/advisor status       # show status
+/advidsor             # typo alias, also toggles
+```
+
 ## Install on a new machine
 
 From the dotfiles repo root:
