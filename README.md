@@ -16,6 +16,16 @@ Install antidote for zsh plugins:
 
 - `git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote`
 
+## Stow packages
+
+Examples:
+
+```bash
+stow -t ~ git zsh hyprland opencode agents claude-code pi
+```
+
+The `pi` package symlinks Pi settings and extensions into `~/.pi/agent/`.
+
 ## General tweaks
 
 ### Hyprland

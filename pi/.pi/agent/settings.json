@@ -1,0 +1,17 @@
+{
+  "lastChangelogVersion": "0.74.0",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.5",
+  "defaultThinkingLevel": "high",
+  "packages": [
+    "npm:pi-codex-image-gen"
+  ],
+  "theme": "dark",
+  "subagents": {
+    "explorer": {
+      "provider": "openai-codex",
+      "model": "gpt-5.3-codex",
+      "thinkingLevel": "medium"
+    }
+  }
+}
