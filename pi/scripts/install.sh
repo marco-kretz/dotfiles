@@ -23,5 +23,7 @@ fi
 stow -t "$TARGET" "$PACKAGE"
 
 echo "Stowed $PACKAGE -> $TARGET"
-echo "Pi extension symlink: ~/.pi/agent/extensions/explore-codebase/index.ts"
-echo "Pi settings symlink:   ~/.pi/agent/settings.json"
+echo "Pi settings symlink:         ~/.pi/agent/settings.json"
+echo "Pi explore extension:        ~/.pi/agent/extensions/explore-codebase/index.ts"
+echo "Pi Omarchy theme extension:  ~/.pi/agent/extensions/omarchy-system-theme.ts"
+echo "Pi Omarchy skill symlink:    ~/.pi/agent/skills/omarchy"

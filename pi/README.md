@@ -9,9 +9,21 @@ When you run `stow -t ~ pi` from the dotfiles repo, these paths are symlinked:
 ```text
 ~/.pi/agent/settings.json
 ~/.pi/agent/extensions/explore-codebase/index.ts
+~/.pi/agent/extensions/omarchy-system-theme.ts
+~/.pi/agent/skills/omarchy
 ```
 
 Root files like this README, `package.json`, `settings.example.json`, and `scripts/` are ignored by stow via `.stow-local-ignore`.
+
+## Included public Pi config
+
+- `settings.json` with default model/theme and package list
+- `explore-codebase` extension
+- `omarchy-system-theme.ts` extension to sync Pi's light/dark theme with Omarchy
+- `omarchy` skill symlink to the local Omarchy skill installation
+- `npm:pi-codex-image-gen` in settings so Pi installs the image generation package
+
+Not included: auth tokens, session history, and generated package state files.
 
 ## explore_codebase
 
@@ -81,4 +93,7 @@ Do **not** commit:
 ```text
 ~/.pi/agent/auth.json
 ~/.pi/agent/sessions/
+~/.pi/agent/extensions/codex-image-gen-install.json
 ```
+
+`codex-image-gen-install.json` is generated package state; `npm:pi-codex-image-gen` in `settings.json` is the portable config.
