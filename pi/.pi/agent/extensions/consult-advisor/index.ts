@@ -224,10 +224,11 @@ export default function (pi: ExtensionAPI) {
 		name: "consult_advisor",
 		label: "advisor",
 		description:
-			"Consult a high-reasoning read-only advisor sub-agent for deeper reasoning, design critique, debugging strategy, risk analysis, or second opinions. Use when the current model may need stronger reasoning or independent review.",
+			"Consult a high-reasoning read-only advisor sub-agent for deeper reasoning, design critique, debugging strategy, risk analysis, or second opinions. Use when the current model may need stronger reasoning, independent review, or is unsure/in doubt.",
 		promptSnippet: "Consult a high-reasoning advisor sub-agent for deeper analysis or second opinions",
 		promptGuidelines: [
 			"Use consult_advisor when a task needs deeper reasoning, design critique, debugging strategy, risk analysis, or an independent second opinion.",
+			"Use consult_advisor when you are unsure, in doubt, see multiple plausible approaches, or want a second opinion before making a risky decision.",
 			"Do not use consult_advisor for simple code lookups; use explore_codebase or direct read/grep instead.",
 			"Pass concise context to consult_advisor, including current plan, uncertainty, relevant errors, and paths when available.",
 		],

@@ -53,6 +53,7 @@ Output is compact Markdown with fixed sections: summary, relevant files, entry p
 Use it for:
 
 - deeper reasoning or second opinions
+- when the current agent is unsure or in doubt
 - plan review and design critique
 - debugging strategy
 - risk analysis
