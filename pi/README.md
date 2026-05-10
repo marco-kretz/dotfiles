@@ -34,7 +34,15 @@ Not included: auth tokens, session history, and generated package state files.
 - `find`
 - `ls`
 
-The sub-agent is instructed to prefer ripgrep-backed searches, read only relevant files, and return a concise findings report with paths and line references.
+The sub-agent is instructed to act as a scanner, not an implementer: prefer ripgrep-backed searches, read only relevant files, avoid speculation, and return the smallest useful set of grounded findings.
+
+Optional modes:
+
+- `targeted_search` — find concrete features, symbols, routes, config, or text
+- `impact_analysis` — find code paths and risks affected by changing something
+- `behavior_trace` — trace a request, command, event, or workflow through the code
+
+Output is compact Markdown with fixed sections: summary, relevant files, entry points, data flow, tests, risks/side effects, open questions, and confidence.
 
 ## Install on a new machine
 

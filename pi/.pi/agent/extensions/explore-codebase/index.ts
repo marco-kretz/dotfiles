@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { basename, dirname, join, resolve } from "node:path";
+import { basename, join, resolve } from "node:path";
 import { Type } from "typebox";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
@@ -93,29 +93,62 @@ function lastAssistantText(events: JsonEvent[]): string {
 }
 
 function createSystemPrompt(cwd: string): string {
-	return `You are a read-only codebase exploration sub-agent. Your job is to investigate the repository for the main agent and return concise, actionable findings.
+	return `You are a read-only codebase exploration sub-agent.
+
+Your job is to inspect the repository and return the smallest useful set of grounded findings that lets the main agent continue safely. You are a scanner, not an implementer.
 
 Rules:
 - Use only read-only tools to inspect files, names, and search results.
+- Do not implement changes, refactor, or give broad architectural advice unless explicitly asked.
+- Do not speculate beyond evidence in the code. If you are unsure, say so.
+- Only mention files you actually inspected or matched.
+- Prefer exact paths, line references, symbol names, routes, commands, configs, tests, and call sites.
 - Prefer grep for broad codebase searches. The grep tool is backed by ripgrep/rg and respects .gitignore.
-- Use find/ls for file discovery and read only the files needed to verify findings.
-- Keep exploring until you have enough evidence to answer the requested question.
-- Return a compact report with bullet points, file paths, and line references.
-- Do not edit files, do not run destructive commands, and do not ask follow-up questions.
+- Use find/ls for file discovery, then read only the most relevant files needed to verify findings.
+- When the task is broad, first identify likely search terms and entry points, then inspect only the most relevant files.
+- Do not summarize the whole repository, include full file contents, or output irrelevant matches.
+- Separate confirmed facts from assumptions or uncertainty.
+- Do not ask follow-up questions.
+
+Output format:
+## Summary
+2-5 sentences.
+
+## Relevant files
+- \`path\`: relevance, symbols, why it matters, key findings.
+
+## Entry points
+- Routes, commands, controllers, handlers, events, or other entry points found.
+
+## Data flow
+- Concise flow if found.
+
+## Tests
+- Relevant tests found, or say none found.
+
+## Risks / side effects
+- Concrete risks grounded in code.
+
+## Open questions
+- Missing or uncertain context.
+
+## Confidence
+low | medium | high
 
 Current working directory: ${cwd}`;
 }
 
-function createUserPrompt(cwd: string, query: string, paths?: string[]): string {
+function createUserPrompt(cwd: string, query: string, mode?: string, paths?: string[]): string {
 	const focus = paths?.length ? `\n\nFocus paths requested by the main agent:\n${paths.map((p) => `- ${p}`).join("\n")}` : "";
+	const modeLine = mode ? `\n\nExplore mode: ${mode}` : "";
 	return `Explore the codebase for the main agent.
 
-Working directory: ${cwd}
+Working directory: ${cwd}${modeLine}
 
 Question / task:
 ${query}${focus}
 
-Return a concise findings report for the main agent. Include exact file paths and line numbers when useful. Summarize only facts that are relevant to the question. Do not modify files.`;
+Return only grounded findings relevant to the task. Prefer the minimal set of files and symbols needed to understand the requested behavior or impact. Do not modify files.`;
 }
 
 function getPiInvocation(args: string[]): { command: string; args: string[] } {
@@ -205,9 +238,13 @@ export default function (pi: ExtensionAPI) {
 		promptGuidelines: [
 			"When a user request requires non-trivial codebase exploration, use explore_codebase before making claims about the repository.",
 			"Use explore_codebase for broad searches or multi-file investigations; use direct read/edit tools for already-known specific files.",
+			"For explore_codebase, pass mode when helpful: targeted_search for concrete symbols/features, impact_analysis for possible change impact, behavior_trace for request/command/event flow.",
 		],
 		parameters: Type.Object({
 			query: Type.String({ description: "The codebase question or exploration task for the sub-agent." }),
+			mode: Type.Optional(
+				Type.String({ description: "Optional exploration mode: targeted_search, impact_analysis, or behavior_trace." }),
+			),
 			paths: Type.Optional(Type.Array(Type.String({ description: "Optional relevant files or directories to focus on." }))),
 			maxOutputChars: Type.Optional(
 				Type.Number({ description: `Maximum characters returned to the main agent (default: ${DEFAULT_MAX_OUTPUT_CHARS}).` }),
@@ -220,10 +257,10 @@ export default function (pi: ExtensionAPI) {
 			if (record.query === undefined && record.task !== undefined) return { ...record, query: record.task };
 			return record;
 		},
-		async execute(_toolCallId, { query, paths, maxOutputChars }, signal, onUpdate, ctx) {
+		async execute(_toolCallId, { query, mode, paths, maxOutputChars }, signal, onUpdate, ctx) {
 			const explorer = readExplorerSettings();
 			const cwd = ctx?.cwd ? resolve(ctx.cwd) : process.cwd();
-			const prompt = createUserPrompt(cwd, query, paths);
+			const prompt = createUserPrompt(cwd, query, mode, paths);
 			const args = [
 				"--mode",
 				"json",
@@ -267,6 +304,7 @@ export default function (pi: ExtensionAPI) {
 				details: {
 					model: `${explorer.provider}/${explorer.model}`,
 					thinkingLevel: explorer.thinkingLevel,
+					mode: mode ?? null,
 					paths: paths ?? [],
 					eventCount: result.events.length,
 				},
