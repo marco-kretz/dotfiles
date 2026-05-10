@@ -9,6 +9,7 @@ When you run `stow -t ~ pi` from the dotfiles repo, these paths are symlinked:
 ```text
 ~/.pi/agent/settings.json
 ~/.pi/agent/extensions/explore-codebase/index.ts
+~/.pi/agent/extensions/consult-advisor/index.ts
 ~/.pi/agent/extensions/omarchy-system-theme.ts
 ~/.pi/agent/skills/omarchy
 ```
@@ -19,6 +20,7 @@ Root files like this README, `package.json`, `settings.example.json`, and `scrip
 
 - `settings.json` with default model/theme and package list
 - `explore-codebase` extension
+- `consult-advisor` extension for a higher-reasoning read-only advisor sub-agent
 - `omarchy-system-theme.ts` extension to sync Pi's light/dark theme with Omarchy
 - `omarchy` skill symlink to the local Omarchy skill installation
 - `npm:pi-codex-image-gen` in settings so Pi installs the image generation package
@@ -44,6 +46,42 @@ Optional modes:
 
 Output is compact Markdown with fixed sections: summary, relevant files, entry points, data flow, tests, risks/side effects, open questions, and confidence.
 
+## consult_advisor
+
+`.pi/agent/extensions/consult-advisor/index.ts` registers a `consult_advisor` tool. The main agent can delegate difficult reasoning to a stronger read-only advisor model.
+
+Use it for:
+
+- deeper reasoning or second opinions
+- plan review and design critique
+- debugging strategy
+- risk analysis
+- architecture trade-offs
+
+Default model config:
+
+```json
+{
+  "subagents": {
+    "advisor": {
+      "provider": "openai-codex",
+      "model": "gpt-5.5",
+      "thinkingLevel": "xhigh"
+    }
+  }
+}
+```
+
+Environment overrides:
+
+```bash
+PI_ADVISOR_PROVIDER=openai-codex
+PI_ADVISOR_MODEL=gpt-5.5
+PI_ADVISOR_THINKING=xhigh
+```
+
+The advisor gets only read-only tools (`read`, `grep`, `find`, `ls`) and outputs compact Markdown: recommendation, reasoning, risks, checks, open questions, and confidence.
+
 ## Install on a new machine
 
 From the dotfiles repo root:
@@ -62,7 +100,7 @@ If `~/.pi/agent/settings.json` already exists as a regular file, the helper move
 
 ## Configuration
 
-The extension reads the explorer model from `~/.pi/agent/settings.json`:
+The extensions read sub-agent model config from `~/.pi/agent/settings.json`:
 
 ```json
 {
@@ -71,6 +109,11 @@ The extension reads the explorer model from `~/.pi/agent/settings.json`:
       "provider": "openai-codex",
       "model": "gpt-5.3-codex",
       "thinkingLevel": "medium"
+    },
+    "advisor": {
+      "provider": "openai-codex",
+      "model": "gpt-5.5",
+      "thinkingLevel": "xhigh"
     }
   }
 }
@@ -82,6 +125,9 @@ Environment variables override the file config:
 PI_EXPLORER_PROVIDER=openai-codex
 PI_EXPLORER_MODEL=gpt-5.3-codex
 PI_EXPLORER_THINKING=medium
+PI_ADVISOR_PROVIDER=openai-codex
+PI_ADVISOR_MODEL=gpt-5.5
+PI_ADVISOR_THINKING=xhigh
 ```
 
 ## Alternative: install as Pi package

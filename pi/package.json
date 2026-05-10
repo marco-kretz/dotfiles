@@ -7,7 +7,9 @@
   ],
   "pi": {
     "extensions": [
-      "./.pi/agent/extensions/explore-codebase/index.ts"
+      "./.pi/agent/extensions/explore-codebase/index.ts",
+      "./.pi/agent/extensions/consult-advisor/index.ts",
+      "./.pi/agent/extensions/omarchy-system-theme.ts"
     ]
   },
   "peerDependencies": {

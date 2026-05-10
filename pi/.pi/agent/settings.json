@@ -12,6 +12,11 @@
       "provider": "openai-codex",
       "model": "gpt-5.3-codex",
       "thinkingLevel": "medium"
+    },
+    "advisor": {
+      "provider": "openai-codex",
+      "model": "gpt-5.5",
+      "thinkingLevel": "xhigh"
     }
   }
 }
