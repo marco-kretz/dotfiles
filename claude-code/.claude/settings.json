@@ -1,15 +1,52 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-6[1M]"
+    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
   },
   "attribution": {
     "commit": "",
     "pr": ""
   },
   "permissions": {
-    "defaultMode": "auto"
+    "allow": [
+      "Bash(php *)",
+      "Bash(xargs cat *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(ddev exec *)",
+      "Bash(ddev describe *)",
+      "Bash(git *)",
+      "Bash(vendor/bin/phpstan analyse *)",
+      "Bash(vendor/bin/php-cs-fixer fix *)",
+      "Bash(ddev mysql *)",
+      "Bash(grep *)",
+      "Bash(composer dump-autoload *)",
+      "Bash(ddev composer *)",
+      "Bash(npx playwright *)",
+      "Bash(npm run *)",
+      "Bash(npm test *)",
+      "Bash(npx eslint *)",
+      "Bash(npx tsc *)",
+      "Bash(npx vitest *)",
+      "Bash(node dist/cli.js --help)",
+      "WebFetch(domain:cookiedatabase.org)",
+      "Read(//tmp/**)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/jkwakman/Open-Cookie-Database/master/open-cookie-database.csv\" -o ocd.csv)",
+      "Bash(awk -F',' '{print $2}')",
+      "Bash(awk -F, 'NR>1 && tolower\\($4\\) ~ /^cmplz/ {print $4\" wc=\"$NF}' ocd.csv)",
+      "Bash(awk -F',' 'NR>1{print tolower\\($4\\)\"|\"$3}' ocd.csv)",
+      "Bash(awk -F'|' '{c[$1]++} END{for\\(n in c\\) if\\(c[n]>1\\) print c[n]\" \"n}')",
+      "Bash(node scripts/refresh-cookie-db.mjs)",
+      "Bash(node --input-type=module -e ' *)",
+      "Bash(awk -F, '{print $4\" => \"$3\" \\(\"$2\"\\) wc=\"$NF}')",
+      "Bash(awk -F, 'NR>1 && $NF ~ /1/ {n=tolower\\($4\\); if \\(index\\(\"sessionid\", n\\)==1\\) print \"MATCH: \"$4\" => \"$3\" \\(\"$2\"\\)\"}' ocd.csv)",
+      "Bash(npx tsx -e ' *)",
+      "Bash(awk -F',' 'NR>1{print $3}' ocd.csv)",
+      "Bash(awk -F',' 'NR>1{c=$3; if\\(c!=\"Functional\"&&c!=\"Security\"&&c!=\"Personalization\"&&c!=\"Analytics\"&&c!=\"Marketing\"\\) print NR\": [\"$4\"] cat=[\"$3\"] plat=[\"$2\"]\"}' ocd.csv)",
+      "Bash(node dist/cli.js dsgvo-check --help)"
+    ],
+    "defaultMode": "default"
   },
-  "model": "opusplan",
   "statusLine": {
     "type": "command",
     "command": "bash /home/marco/.claude/statusline.sh"
@@ -19,18 +56,19 @@
     "code-review@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
     "playwright@claude-plugins-official": false,
-    "php-lsp@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": false
+    "superpowers@claude-plugins-official": false,
+    "security-guidance@claude-plugins-official": true
   },
   "effortLevel": "high",
-  "advisorModel": "opus",
+  "awaySummaryEnabled": false,
   "voice": {
     "enabled": true,
     "mode": "tap"
   },
   "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true
+  "useAutoModeDuringPlan": false
 }
