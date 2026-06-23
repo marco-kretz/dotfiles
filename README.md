@@ -26,6 +26,14 @@ stow -t ~ git zsh hyprland opencode agents claude-code pi
 
 The `pi` package symlinks Pi settings and extensions into `~/.pi/agent/`.
 
+### Claude Code settings
+
+`claude-code/.claude/settings.json` is **git-ignored** because it accumulates machine-local, project-specific permission entries that should not be public. Bootstrap it from the tracked template before stowing:
+
+```bash
+cp claude-code/.claude/settings.json.example claude-code/.claude/settings.json
+```
+
 ## General tweaks
 
 ### Hyprland
