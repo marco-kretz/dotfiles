@@ -21,7 +21,7 @@ Install antidote for zsh plugins:
 Examples:
 
 ```bash
-stow -t ~ git zsh hyprland opencode agents claude-code pi
+stow -t ~ git zsh hyprland opencode agents claude-code pi fonts vicinae
 ```
 
 The `pi` package symlinks Pi settings and extensions into `~/.pi/agent/`.
