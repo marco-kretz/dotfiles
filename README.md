@@ -23,7 +23,7 @@ git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antid
 ## Stow packages
 
 ```bash
-stow -t ~ git zsh opencode agents claude-code pi fonts vicinae pipewire voxtype
+stow -t ~ git zsh opencode agents claude-code pi fonts vicinae pipewire voxtype environment
 ```
 
 The `pi` package symlinks Pi settings and extensions into `~/.pi/agent/`.
@@ -37,6 +37,38 @@ cp claude-code/.claude/settings.json.example claude-code/.claude/settings.json
 ```
 
 ## General tweaks
+
+### SSH agent (GCR)
+
+SSH keys are unlocked via the [GCR ssh-agent](https://gitlab.gnome.org/GNOME/gcr) wrapper. Keys are stored in the system keyring and unlocked once per login; GUI apps and terminal tools pick up the agent through `SSH_AUTH_SOCK`.
+
+1. Install dependencies:
+
+```bash
+sudo dnf install gcr openssh
+```
+
+2. Enable the user service (socket activation):
+
+```bash
+systemctl --user enable --now gcr-ssh-agent.socket
+```
+
+3. Stow the environment config:
+
+```bash
+stow -t ~ environment
+```
+
+The `environment` module symlinks `~/.config/environment.d/ssh_askpass.conf`, which sets:
+
+```conf
+SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/gcr/ssh
+SSH_ASKPASS=/usr/libexec/gcr-ssh-askpass
+SSH_ASKPASS_REQUIRE=prefer
+```
+
+systemd loads these variables on login. Log out and back in (or reboot) after stowing.
 
 ### Sysctl
 
@@ -57,39 +89,6 @@ kernel.split_lock_mitigate = 0
 # Network (BBR is better for gaming latency/jitter than Cubic)
 net.core.default_qdisc = cake
 net.ipv4.tcp_congestion_control = bbr
-```
-
-### KDE Plasma
-
-#### Auto unlock SSH key
-
-1. `sudo dnf install ksshaskpass openssh`
-2. `stow -t ~ kde_ssh`
-3. `systemctl enable --user ssh-agent`
-4. Correct env vars are available after relog.
-
-### GNOME (not using right now)
-
-#### Increase window timeout
-
-This increases the grace period for GNOME thinking that a window has crashed. Most useful for some games.
-
-```bash
-gsettings set org.gnome.mutter check-alive-timeout 30000
-```
-
-Resize windows by holding down right mouse button:
-
-```bash
-gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true
-```
-
-#### Auto unlock SSH keys
-
-Make sure GNOME's GCR ssh-agent wrapper is running:
-
-```bash
-systemctl enable --now --user gcr-ssh-agent.service
 ```
 
 ~MK
