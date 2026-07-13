@@ -68,25 +68,4 @@ SSH_ASKPASS_REQUIRE=prefer
 
 systemd loads these variables on login. Log out and back in (or reboot) after stowing.
 
-### Sysctl
-
-```conf
-# Virtual Memory Tweaks for 64GB RAM (!)
-# Force data to write to disk sooner to prevent massive "stop-the-world" flushes
-vm.dirty_bytes = 268435456
-vm.dirty_background_bytes = 134217728
-
-# Decrease swappiness
-vm.swappiness = 10
-
-# Gaming Performance
-# Disable split lock mitigate. This fixes FPS drops in many games (e.g. God of War)
-# creating a performance penalty when games do sloppy memory locking.
-kernel.split_lock_mitigate = 0
-
-# Network (BBR is better for gaming latency/jitter than Cubic)
-net.core.default_qdisc = cake
-net.ipv4.tcp_congestion_control = bbr
-```
-
 ~MK
