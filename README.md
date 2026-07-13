@@ -1,27 +1,29 @@
 # mk.dotfiles
 
-These are the dotfiles I use on my linux-machines. Feel free to use, share or whatever.<br>
+These are the dotfiles I use on my Linux machines. Feel free to use, share or whatever.
 
 ## OS
 
-[**Omarchy**](https://omarchy.org/)
+[**Fedora 44**](https://fedoraproject.org/) with [**Niri**](https://github.com/YaLTeR/niri) and [**Noctalia Shell**](https://github.com/noctalia-dev/noctalia-shell).
 
 ## Deps
 
 Install required packages:
 
-- `sudo pacman -S zsh stow fzf fd bat eza starship`
+```bash
+sudo dnf install zsh stow fzf fd-find bat eza starship
+```
 
 Install antidote for zsh plugins:
 
-- `git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote`
+```bash
+git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote
+```
 
 ## Stow packages
 
-Examples:
-
 ```bash
-stow -t ~ git zsh hyprland opencode agents claude-code pi fonts vicinae
+stow -t ~ git zsh opencode agents claude-code pi fonts vicinae pipewire voxtype
 ```
 
 The `pi` package symlinks Pi settings and extensions into `~/.pi/agent/`.
@@ -36,31 +38,9 @@ cp claude-code/.claude/settings.json.example claude-code/.claude/settings.json
 
 ## General tweaks
 
-### Hyprland
-
-```
-# Use gcr-ssh agent
-env = SSH_AUTH_SOCK, $XDG_RUNTIME_DIR/gcr/ssh
-
-# No scaling for XWayland apps
-xwayland {
-    force_zero_scaling = true
-}
-
-# Allow HDR in fullscreen
-render {
-    cm_fs_passthrough = 1
-}
-
-# Disable mouse acceleration
-input {
-    force_no_accel = true
-}
-```
-
 ### Sysctl
 
-```CONF
+```conf
 # Virtual Memory Tweaks for 64GB RAM (!)
 # Force data to write to disk sooner to prevent massive "stop-the-world" flushes
 vm.dirty_bytes = 268435456
@@ -83,7 +63,7 @@ net.ipv4.tcp_congestion_control = bbr
 
 #### Auto unlock SSH key
 
-1. `sudo pacman -S ksshaskpass openssh`
+1. `sudo dnf install ksshaskpass openssh`
 2. `stow -t ~ kde_ssh`
 3. `systemctl enable --user ssh-agent`
 4. Correct env vars are available after relog.
@@ -94,16 +74,22 @@ net.ipv4.tcp_congestion_control = bbr
 
 This increases the grace period for GNOME thinking that a window has crashed. Most useful for some games.
 
-- `gsettings set org.gnome.mutter check-alive-timeout 30000`
+```bash
+gsettings set org.gnome.mutter check-alive-timeout 30000
+```
 
-Resize windows by holding down right mouse button
+Resize windows by holding down right mouse button:
 
-- `gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true`
+```bash
+gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true
+```
 
 #### Auto unlock SSH keys
 
 Make sure GNOME's GCR ssh-agent wrapper is running:
 
-- `systemctl enable --now --user gcr-ssh-agent.service`
+```bash
+systemctl enable --now --user gcr-ssh-agent.service
+```
 
 ~MK
