@@ -4,7 +4,7 @@ These are the dotfiles I use on my Linux machines. Feel free to use, share or wh
 
 ## OS
 
-[**Fedora 44**](https://fedoraproject.org/) with [**Niri**](https://github.com/YaLTeR/niri) and [**Noctalia Shell**](https://github.com/noctalia-dev/noctalia-shell).
+[**Fedora 44**](https://fedoraproject.org/) with [**Niri**](https://github.com/niri-wm/niri) and [**Noctalia Shell**](https://github.com/noctalia-dev/noctalia).
 
 ## Deps
 
