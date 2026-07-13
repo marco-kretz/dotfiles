@@ -23,10 +23,8 @@ git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antid
 ## Stow packages
 
 ```bash
-stow -t ~ git zsh opencode agents claude-code pi fonts vicinae pipewire voxtype environment
+stow -t ~ git zsh opencode agents claude-code fonts vicinae pipewire voxtype environment
 ```
-
-The `pi` package symlinks Pi settings and extensions into `~/.pi/agent/`.
 
 ### Claude Code settings
 
