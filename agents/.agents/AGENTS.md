@@ -26,7 +26,3 @@
 - PHP and JavaScript: strict typing wherever practical.
 - PHP: prefer modern language features supported by the project's PHP version.
 
-## Environment
-
-- OS: Arch Linux, zsh, Hyprland (omarchy desktop)
-- Dotfiles: ~/GitHub/dotfiles
