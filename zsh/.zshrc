@@ -20,10 +20,6 @@ SAVEHIST=10000
 # PATH (early so plugin hooks resolve commands)
 export PATH="$HOME/.symfony5/bin:$HOME/.local/bin:$HOME/.config/composer/vendor/bin:$PATH"
 
-# Omarchy shell base — portable guard so this .zshrc works on non-Omarchy machines too
-[[ -f /usr/share/omarchy-zsh/shell/zoptions ]] && source /usr/share/omarchy-zsh/shell/zoptions
-[[ -f /usr/share/omarchy-zsh/shell/all ]] && source /usr/share/omarchy-zsh/shell/all
-
 # Antidote plugin manager (only active when installed)
 if [[ -d ~/.antidote ]]; then
   zsh_plugins=${ZDOTDIR:-$HOME}/.zsh_plugins
@@ -67,9 +63,10 @@ alias grep='grep --color=auto'
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -I'
+alias win11up='cd ~/dev/win11 && docker compose up -d'
+alias win11down='cd ~/dev/win11 && docker compose stop'
 
-# Prompt — skip if Omarchy already initialized starship via its inits
-[[ -z "$STARSHIP_SESSION_KEY" ]] && command -v starship >/dev/null && eval "$(starship init zsh)"
+eval "$(starship init zsh)"
 
 # Terminal: do not override a sensible TERM from the emulator (e.g. xterm-kitty)
 if [[ -z $TERM || $TERM == dumb ]]; then
@@ -104,3 +101,10 @@ ssh() { TERM=xterm-256color command ssh "$@" }
 # if [ -z "$SSH_AUTH_SOCK" ]; then
 #   export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/keyring/ssh"
 # fi
+
+
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<
