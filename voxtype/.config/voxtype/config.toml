@@ -12,7 +12,7 @@ state_file = "auto"
 
 [hotkey]
 # Hotkey is configured in Hyprland. Default is Super + Ctrl + X
-enabled = false
+enabled = true
 
 [audio]
 # Audio input device ("default" uses system default)
