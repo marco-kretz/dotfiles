@@ -9,20 +9,19 @@
 - Do not claim verification you did not perform.
 - Run the smallest relevant checks when possible.
 - Flag risky operations before executing or recommending them.
-- Use conventional commit message style.
-- Don’t fight errors! Whenever you encounter the same error twice, research the web and find 3-5 possible ways to fix it. Then choose the most efficient solution and implement it.
+- When writing commit messages, use Conventional Commits.
+- If the same error occurs twice, stop repeating the approach. Consult relevant documentation or research alternatives, then choose the simplest in-scope solution.
 - When a third-party library’s behavior is in the way, look for its documented opt-out / skip / hook API first. Use the library’s own contract; don’t build a compensation layer around it.
 
 ## Code Style
 
 - No inline comments unless the WHY is non-obvious (hidden constraint, workaround, subtle invariant).
-- No docstrings or multi-line comment blocks.
+- Avoid comments and docstrings that merely restate the code. Preserve documentation required by project conventions or public APIs.
 - No abstractions beyond what the task requires.
-- No error handling for scenarios that cannot happen.
+- Avoid speculative error handling for impossible internal states; validate untrusted input and external boundaries.
 
 ## Languages
 
 - ES6+ for JavaScript unless the project requires otherwise.
-- PHP and JavaScript: strict typing wherever practical.
+- Prefer strict typing in PHP and TypeScript where supported by the project.
 - PHP: prefer modern language features supported by the project's PHP version.
-
