@@ -103,6 +103,12 @@ ssh() { TERM=xterm-256color command ssh "$@" }
 # fi
 
 
+
+# opencode
+export PATH="$HOME/.opencode/bin:$PATH"
+
+export PATH="$HOME/.local/npm/bin:$PATH"
+
 # >>> grok installer >>>
 export PATH="$HOME/.grok/bin:$PATH"
 fpath=(~/.grok/completions/zsh $fpath)
