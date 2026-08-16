@@ -82,7 +82,6 @@ The `environment` module symlinks `~/.config/environment.d/ssh_askpass.conf`, wh
 
 ```conf
 SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/gcr/ssh
-SSH_ASKPASS=/usr/libexec/gcr-ssh-askpass
 SSH_ASKPASS_REQUIRE=prefer
 ```
 
