@@ -23,7 +23,27 @@ git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antid
 ## Stow packages
 
 ```bash
-stow -t ~ git zsh opencode agents claude-code fonts vicinae pipewire voxtype environment
+stow -t ~ git zsh opencode agents claude-code fonts vicinae pipewire voxtype environment notizen openrgb
+```
+
+`pipewire` also ships the WirePlumber drop-in that disables ALSA suspend-on-idle (broken stereo after standby). Restart WirePlumber after stowing:
+
+```bash
+systemctl --user restart wireplumber
+```
+
+`notizen` installs `~/.local/bin/notizen-inbox` plus a twice-daily user timer (08:00 and 16:00). Enable it after stowing:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now notizen-inbox.timer
+```
+
+`openrgb` tracks the `zWhite` / `zOff` profiles and a oneshot that applies `zWhite` on graphical login. Enable it after stowing:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now openrgb-profile.service
 ```
 
 ### Claude Code settings

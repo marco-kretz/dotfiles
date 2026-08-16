@@ -1,0 +1,13 @@
+[Unit]
+Description=Teams/Outlook abrufen und Notizen-Inbox einsortieren
+
+[Timer]
+OnCalendar=*-*-* 08:00:00
+OnCalendar=*-*-* 16:00:00
+# Verpasste Läufe (PC war aus / abgemeldet) beim nächsten Start nachholen
+Persistent=true
+# Nicht exakt zur vollen Minute, damit es nicht mit anderem Startkram kollidiert
+RandomizedDelaySec=5min
+
+[Install]
+WantedBy=timers.target

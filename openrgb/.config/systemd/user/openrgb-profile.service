@@ -1,0 +1,12 @@
+[Unit]
+Description=Apply OpenRGB profile
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/openrgb --profile zWhite --noautoconnect
+RemainAfterExit=yes
+
+[Install]
+WantedBy=graphical-session.target
