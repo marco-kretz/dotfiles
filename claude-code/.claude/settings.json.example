@@ -1,38 +1,31 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "env": {
-    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
-  },
   "attribution": {
     "commit": "",
-    "pr": ""
+    "pr": "",
+    "sessionUrl": false
   },
-  "permissions": {
-    "allow": [],
-    "defaultMode": "default"
-  },
+  "model": "claude-fable-5-1[1m]",
   "statusLine": {
     "type": "command",
     "command": "bash /home/marco/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true,
-    "playwright@claude-plugins-official": false,
-    "skill-creator@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": false,
-    "security-guidance@claude-plugins-official": true
+    "chrome-devtools-mcp@claude-plugins-official": true,
+    "ponytail@ponytail": true
   },
-  "effortLevel": "high",
-  "awaySummaryEnabled": false,
-  "voice": {
-    "enabled": true,
-    "mode": "tap"
+  "extraKnownMarketplaces": {
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    }
   },
-  "skipDangerousModePermissionPrompt": true,
-  "skipWorkflowUsageWarning": true,
-  "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "useAutoModeDuringPlan": false
+  "effortLevel": "medium",
+  "tui": "fullscreen",
+  "theme": "custom:omarchy",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true
 }
