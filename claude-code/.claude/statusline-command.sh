@@ -59,8 +59,10 @@ else
   model_display="${model:-"--"}"
 fi
 
-# ANSI colors; context usage turns yellow at 50% and red at 80%
-dim=$'\e[2m'; blue=$'\e[34m'; green=$'\e[32m'; magenta=$'\e[35m'; yellow=$'\e[33m'; red=$'\e[31m'; reset=$'\e[0m'
+# Truecolor from the Omarchy akari palette (~/.config/omarchy/themes/akari/colors.toml)
+hex() { printf '\e[38;2;%d;%d;%dm' 0x${1:1:2} 0x${1:3:2} 0x${1:5:2}; }
+dim=$(hex '#a79c8c'); blue=$(hex '#91bff2'); green=$(hex '#85d9c3'); magenta=$(hex '#ff6b75')
+yellow=$(hex '#efd08a'); red=$(hex '#ff9585'); reset=$'\e[0m'
 sep=" ${dim}|${reset} "
 usage_color=$green
 if [ -n "$used" ]; then
