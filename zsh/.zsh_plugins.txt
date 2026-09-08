@@ -1,3 +1,0 @@
-zdharma-continuum/fast-syntax-highlighting kind:defer
-zsh-users/zsh-autosuggestions kind:defer
-joshskidmore/zsh-fzf-history-search kind:defer

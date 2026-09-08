@@ -4,47 +4,58 @@ These are the dotfiles I use on my Linux machines. Feel free to use, share or wh
 
 ## OS
 
-[**Fedora 44**](https://fedoraproject.org/) with [**Niri**](https://github.com/niri-wm/niri) and [**Noctalia Shell**](https://github.com/noctalia-dev/noctalia).
+[**Omarchy**](https://omarchy.org/) (Arch Linux, Hyprland). Shell is the Omarchy default (bash) with Starship.
 
 ## Deps
 
-Install required packages:
-
 ```bash
-sudo dnf install zsh stow fzf fd-find bat eza starship
-```
-
-Install antidote for zsh plugins:
-
-```bash
-git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote
+sudo pacman -S stow starship
 ```
 
 ## Stow packages
 
 ```bash
-stow -t ~ git zsh opencode agents claude-code fonts vicinae pipewire voxtype environment notizen openrgb
+stow -t ~ git starship agents claude-code opencode pipewire voxtype openrgb
 ```
 
-`pipewire` also ships the WirePlumber drop-in that disables ALSA suspend-on-idle (broken stereo after standby). Restart WirePlumber after stowing:
+| Package | What it links |
+|---|---|
+| `git` | `~/.gitconfig` |
+| `starship` | `~/.config/starship.toml` |
+| `agents` | `~/.agents/AGENTS.md` (shared rules for all coding agents) and `~/.agents/skills/*` |
+| `claude-code` | `~/.claude/CLAUDE.md`, statusline script, `settings.json.example` |
+| `opencode` | `~/.config/opencode/{opencode.json,tui.json,agents/}`, `AGENTS.md` symlinks to the shared one |
+| `pipewire` | MMX 300 EQ sink, pulse autogain block, WirePlumber drop-in that disables ALSA suspend-on-idle (broken stereo after standby) |
+| `voxtype` | `~/.config/voxtype/config.toml` |
+| `openrgb` | `sizes.ors`, `zWhite` / `zOff` profiles, oneshot that applies `zWhite` on graphical login |
+
+After stowing `pipewire`:
 
 ```bash
 systemctl --user restart wireplumber
 ```
 
-`notizen` installs `~/.local/bin/notizen-inbox` plus a twice-daily user timer (08:00 and 16:00). Enable it after stowing:
-
-```bash
-systemctl --user daemon-reload
-systemctl --user enable --now notizen-inbox.timer
-```
-
-`openrgb` tracks the `zWhite` / `zOff` profiles and a oneshot that applies `zWhite` on graphical login. Enable it after stowing:
+After stowing `openrgb`:
 
 ```bash
 systemctl --user daemon-reload
 systemctl --user enable --now openrgb-profile.service
 ```
+
+### Agent skills
+
+Skills live in `agents/.agents/skills/` and are stowed to `~/.agents/skills/`, which is where
+[`npx skills`](https://github.com/vercel-labs/skills) installs to as well. To add a new skill,
+install it with `npx skills add <repo> -g`, then move the resulting directory from `~/.agents/skills/`
+into `agents/.agents/skills/` and run `stow -t ~ agents`.
+
+Claude Code reads `~/.claude/skills/`, so link them there once (idempotent, `--prune` removes dead links):
+
+```bash
+./link-agent-skills.sh --prune
+```
+
+The `omarchy` and `diagnose-crash` skills are shipped by Omarchy itself and are not tracked here.
 
 ### Claude Code settings
 
@@ -53,38 +64,5 @@ systemctl --user enable --now openrgb-profile.service
 ```bash
 cp claude-code/.claude/settings.json.example claude-code/.claude/settings.json
 ```
-
-## General tweaks
-
-### SSH agent (GCR)
-
-SSH keys are unlocked via the [GCR ssh-agent](https://gitlab.gnome.org/GNOME/gcr) wrapper. Keys are stored in the system keyring and unlocked once per login; GUI apps and terminal tools pick up the agent through `SSH_AUTH_SOCK`.
-
-1. Install dependencies:
-
-```bash
-sudo dnf install gcr openssh
-```
-
-2. Enable the user service (socket activation):
-
-```bash
-systemctl --user enable --now gcr-ssh-agent.socket
-```
-
-3. Stow the environment config:
-
-```bash
-stow -t ~ environment
-```
-
-The `environment` module symlinks `~/.config/environment.d/ssh_askpass.conf`, which sets:
-
-```conf
-SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/gcr/ssh
-SSH_ASKPASS_REQUIRE=prefer
-```
-
-systemd loads these variables on login. Log out and back in (or reboot) after stowing.
 
 ~MK
