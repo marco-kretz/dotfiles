@@ -1,0 +1,22 @@
+#!/bin/bash
+# systemd-sleep hook: turn OpenRGB off before suspend, restore theme color after resume.
+exec 2>&1
+log() { logger -t openrgb-sleep "$*"; }
+
+log "invoked: action=$1 phase=$2"
+
+case "$1" in
+  pre)
+    HOME=/root /usr/bin/openrgb -m direct -c 000000 >/dev/null 2>&1
+    log "pre: openrgb blank exit=$?"
+    ;;
+  post)
+    THEME=$(cat /home/marco/.local/state/omarchy/current/theme.name 2>/dev/null)
+    if [ -n "$THEME" ]; then
+      runuser -u marco -- /home/marco/.config/omarchy/hooks/theme-set.d/openrgb-accent.sh "$THEME" >/dev/null 2>&1
+      log "post: restore theme=$THEME exit=$?"
+    else
+      log "post: no theme name found"
+    fi
+    ;;
+esac

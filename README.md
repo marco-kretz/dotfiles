@@ -27,7 +27,7 @@ stow -t ~ git starship agents claude-code opencode pipewire voxtype openrgb
 | `opencode` | `~/.config/opencode/{opencode.json,tui.json,agents/}`, `AGENTS.md` symlinks to the shared one |
 | `pipewire` | MMX 300 EQ sink, pulse autogain block, WirePlumber drop-in that disables ALSA suspend-on-idle (broken stereo after standby) |
 | `voxtype` | `~/.config/voxtype/config.toml` |
-| `openrgb` | `sizes.ors`, `zWhite` / `zOff` profiles, oneshot that applies `zWhite` on graphical login |
+| `openrgb` | `sizes.ors`, `zWhite` / `zOff` profiles, Omarchy `theme-set` hook that syncs the LEDs to the theme accent, oneshot that applies it on graphical login, sleep hook (not stowed, see below) |
 
 After stowing `pipewire`:
 
@@ -40,7 +40,18 @@ After stowing `openrgb`:
 ```bash
 systemctl --user daemon-reload
 systemctl --user enable --now openrgb-profile.service
+
+# Sleep hook: blanks the LEDs before suspend and restores them on resume.
+# systemd only scans /usr/lib/systemd/system-sleep (not /etc), so it is symlinked, not stowed.
+sudo ln -sf ~/GitHub/dotfiles/openrgb/system-sleep/openrgb /usr/lib/systemd/system-sleep/openrgb
+
+# The user needs read access to the SMBus devices for RAM / motherboard zones:
+sudo usermod -aG i2c "$USER"   # takes effect after the next login
 ```
+
+The LED color follows the active Omarchy theme's `accent` from its `colors.toml`. To use a different
+color for the LEDs than for the UI, drop a hex value into
+`~/.config/omarchy/themes/<slug>/openrgb-accent` — it wins over `accent`.
 
 ### Agent skills
 

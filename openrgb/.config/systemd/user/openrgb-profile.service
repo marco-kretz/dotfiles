@@ -5,7 +5,7 @@ PartOf=graphical-session.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/openrgb --profile zWhite --noautoconnect
+ExecStart=/bin/bash -c '%h/.config/omarchy/hooks/theme-set.d/openrgb-accent.sh "$(cat %h/.local/state/omarchy/current/theme.name)"'
 RemainAfterExit=yes
 
 [Install]
