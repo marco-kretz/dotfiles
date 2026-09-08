@@ -15,7 +15,7 @@ sudo pacman -S stow starship
 ## Stow packages
 
 ```bash
-stow -t ~ git starship agents claude-code codex opencode pipewire voxtype openrgb
+stow -t ~ git starship agents claude-code codex opencode pipewire voxtype openrgb ddev
 ```
 
 | Package | What it links |
@@ -29,6 +29,7 @@ stow -t ~ git starship agents claude-code codex opencode pipewire voxtype openrg
 | `pipewire` | MMX 300 EQ sink, pulse autogain block, WirePlumber drop-in that disables ALSA suspend-on-idle (broken stereo after standby) |
 | `voxtype` | `~/.config/voxtype/config.toml` |
 | `openrgb` | `sizes.ors`, `zWhite` / `zOff` profiles, Omarchy `theme-set` hook that syncs the LEDs to the theme accent, oneshot that applies it on graphical login, sleep hook (not stowed, see below) |
+| `ddev` | `~/.ddev/commands/host/worktree` (`ddev worktree <branch>`: new git worktree as its own DDEV project, incl. DB copy) |
 
 After stowing `pipewire`:
 

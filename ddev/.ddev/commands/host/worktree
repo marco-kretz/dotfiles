@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+## Description: Neuen git worktree als eigenes DDEV-Projekt anlegen (inkl. DB-Kopie)
+## Usage: worktree <branch> [zielverzeichnis]
+## Example: "ddev worktree feature-x"
+
+set -euo pipefail
+
+branch="${1:-}"
+[ -n "$branch" ] || { echo "usage: ddev worktree <branch> [dir]" >&2; exit 1; }
+slug="${branch//\//-}"
+dir="${2:-${DDEV_APPROOT}-${slug}}"
+name="${DDEV_PROJECT}-${slug}"
+
+git -C "$DDEV_APPROOT" worktree add "$dir" "$branch" \
+  || git -C "$DDEV_APPROOT" worktree add -b "$branch" "$dir"
+
+# gitignored von ddev -> ueberschreibt name: aus config.yaml, ohne den Baum dreckig zu machen
+printf 'name: %s\n' "$name" > "$dir/.ddev/config.local.yaml"
+
+if [ "${DDEV_WORKTREE_NO_DB:-}" != "true" ]; then
+  dump="$(mktemp -u).sql.gz"
+  ddev export-db --file="$dump"
+  ( cd "$dir" && ddev start && ddev import-db --file="$dump" )
+  rm -f "$dump"
+else
+  ( cd "$dir" && ddev start )
+fi
+
+echo "-> $dir  (ddev delete -O $name && git worktree remove $dir  zum Aufraeumen)"
