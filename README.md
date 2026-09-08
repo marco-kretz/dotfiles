@@ -15,7 +15,7 @@ sudo pacman -S stow starship
 ## Stow packages
 
 ```bash
-stow -t ~ git starship agents claude-code opencode pipewire voxtype openrgb
+stow -t ~ git starship agents claude-code codex opencode pipewire voxtype openrgb
 ```
 
 | Package | What it links |
@@ -24,6 +24,7 @@ stow -t ~ git starship agents claude-code opencode pipewire voxtype openrgb
 | `starship` | `~/.config/starship.toml` |
 | `agents` | `~/.agents/AGENTS.md` (shared rules for all coding agents) and `~/.agents/skills/*` |
 | `claude-code` | `~/.claude/CLAUDE.md`, statusline script, `settings.json.example` |
+| `codex` | `~/.codex/{config.toml,AGENTS.md,agents/}` and a portable `config.toml.example` |
 | `opencode` | `~/.config/opencode/{opencode.json,tui.json,agents/}`, `AGENTS.md` symlinks to the shared one |
 | `pipewire` | MMX 300 EQ sink, pulse autogain block, WirePlumber drop-in that disables ALSA suspend-on-idle (broken stereo after standby) |
 | `voxtype` | `~/.config/voxtype/config.toml` |
@@ -75,5 +76,22 @@ The `omarchy` and `diagnose-crash` skills are shipped by Omarchy itself and are 
 ```bash
 cp claude-code/.claude/settings.json.example claude-code/.claude/settings.json
 ```
+
+### Codex settings
+
+`codex/.codex/config.toml` is **git-ignored** because Codex stores machine-local paths,
+project trust, plugin state, and desktop settings in it. The tracked `config.toml.example`
+contains model defaults, subagent defaults, general settings, and plugin enablement.
+On a new machine, bootstrap the config before stowing:
+
+```bash
+cp codex/.codex/config.toml.example codex/.codex/config.toml
+stow -t ~ codex
+```
+
+The Codex-specific `AGENTS.md` and `agents/*.toml` are tracked directly. Shared skills
+remain in the `agents` package. Install the enabled plugins separately on new machines.
+Credentials, sessions, caches, and local approval rules remain outside the package.
+After changing portable settings, update `config.toml.example` as well.
 
 ~MK
