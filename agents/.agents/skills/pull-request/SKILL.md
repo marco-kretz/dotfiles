@@ -12,7 +12,12 @@ description: >-
 
 # Workflow
 
-Before drafting the PR description, gather context:
+Before creating the actual PR, delegate the review to the `code-quality-reviewer` agent —
+a fresh context judges the diff better than the session that wrote it. Fall back to running
+the `thermo-nuclear-code-quality-review` skill in-session if that agent is unavailable.
+If problems were found inform the user and ask for confirmation to apply the proposed fixes.
+
+Next, before drafting the PR description, gather context:
 
 ```bash
 git status

@@ -1,28 +1,24 @@
 # Global Rules
 
-- Be concise and explicit.
-- For non-trivial work, inspect first then propose a short plan before acting.
-- Prefer minimal diffs over broad rewrites.
-- Prefer the simplest possible fix. When a proposed change sounds elaborate for a small visible bug, stop and look for a one-line / one-attribute / one-flag answer before building a parallel mechanism.
-- Preserve project conventions.
-- Avoid unnecessary dependencies, renames, and formatting churn.
-- Do not claim verification you did not perform.
-- Run the smallest relevant checks when possible.
-- Flag risky operations before executing or recommending them.
-- When writing commit messages, use Conventional Commits.
-- Delegate reads of files over ~400 lines and multi-file searches to an Explore subagent when only the conclusion is needed; use Read offset/limit for targeted reads.
-- If the same error occurs twice, stop repeating the approach. Consult relevant documentation or research alternatives, then choose the simplest in-scope solution.
-- When a third-party library’s behavior is in the way, look for its documented opt-out / skip / hook API first. Use the library’s own contract; don’t build a compensation layer around it.
+- For non-trivial work, inspect first, then propose a short plan before acting.
+- Prefer minimal diffs and the simplest fix. Look for a one-line / one-flag answer before building a parallel mechanism.
+- Preserve project conventions. Avoid unnecessary dependencies, renames, and formatting churn.
+- Run the smallest relevant check before reporting done.
+- If the same error occurs twice, stop repeating the approach. Check the docs or alternatives, then pick the simplest in-scope fix.
+- When a third-party library's behavior is in the way, use its documented opt-out / skip / hook API. Don't build a compensation layer around it.
+- Commit messages: Conventional Commits.
 
 ## Code Style
 
-- No inline comments unless the WHY is non-obvious (hidden constraint, workaround, subtle invariant).
-- Avoid comments and docstrings that merely restate the code. Preserve documentation required by project conventions or public APIs.
+- Comments only where the WHY is non-obvious (hidden constraint, workaround, subtle invariant). Keep docs required by project conventions or public APIs.
 - No abstractions beyond what the task requires.
-- Avoid speculative error handling for impossible internal states; validate untrusted input and external boundaries.
+- No speculative error handling for impossible internal states; validate untrusted input and external boundaries.
+- PHP and TypeScript: strict typing and modern language features as supported by the project's version.
 
-## Languages
+## DDEV + git worktrees
 
-- ES6+ for JavaScript unless the project requires otherwise.
-- Prefer strict typing in PHP and TypeScript where supported by the project.
-- PHP: prefer modern language features supported by the project's PHP version.
+In a DDEV project (`.ddev/config.yaml` present): create worktrees with `ddev worktree <branch>`,
+never with plain `git worktree add`. It sets the project name
+in `.ddev/config.local.yaml` (gitignored; never use `ddev config --project-name`, that changes the
+committed config.yaml), starts the project and copies the DB.
+Cleanup: `ddev delete -O <name> && git worktree remove <dir>`.

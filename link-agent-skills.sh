@@ -99,4 +99,4 @@ fi
 
 echo ""
 echo "Done: $linked linked, $skipped unchanged/skipped, $pruned pruned"
-[[ $DRY_RUN -eq 1 ]] && echo "(Dry run — no actual changes made)"
+[[ $DRY_RUN -eq 1 ]] && echo "(Dry run — no actual changes made)" || true
