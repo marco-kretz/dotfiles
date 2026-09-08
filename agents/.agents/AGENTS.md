@@ -10,6 +10,7 @@
 - Run the smallest relevant checks when possible.
 - Flag risky operations before executing or recommending them.
 - When writing commit messages, use Conventional Commits.
+- Delegate reads of files over ~400 lines and multi-file searches to an Explore subagent when only the conclusion is needed; use Read offset/limit for targeted reads.
 - If the same error occurs twice, stop repeating the approach. Consult relevant documentation or research alternatives, then choose the simplest in-scope solution.
 - When a third-party library’s behavior is in the way, look for its documented opt-out / skip / hook API first. Use the library’s own contract; don’t build a compensation layer around it.
 
