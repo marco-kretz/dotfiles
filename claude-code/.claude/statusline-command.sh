@@ -70,7 +70,8 @@ if [ -n "$used" ]; then
   [ "${used%.*}" -ge 80 ] && usage_color=$red
 fi
 
-out="${blue}${location}${reset}"
-[ -n "$branch_display" ] && out+="${sep}${green}${branch_display}${reset}"
-out+="${sep}${magenta}${model_display}${reset}${sep}${usage_color}${context_usage}${reset}"
-printf "%s" "$out"
+# Nerd Font glyphs: folder, git branch, sparkle (model), gauge (context)
+out="${blue}\uf07b ${location}${reset}"
+[ -n "$branch_display" ] && out+="${sep}${green}\ue725 ${branch_display}${reset}"
+out+="${sep}${magenta}\uf0d0 ${model_display}${reset}${sep}${usage_color}\uf0e4 ${context_usage}${reset}"
+printf "%b" "$out"
