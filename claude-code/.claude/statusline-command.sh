@@ -59,8 +59,16 @@ else
   model_display="${model:-"--"}"
 fi
 
-if [ -n "$branch_display" ]; then
-  printf "%s | %s | %s | %s" "$location" "$branch_display" "$model_display" "$context_usage"
-else
-  printf "%s | %s | %s" "$location" "$model_display" "$context_usage"
+# ANSI colors; context usage turns yellow at 50% and red at 80%
+dim=$'\e[2m'; blue=$'\e[34m'; green=$'\e[32m'; magenta=$'\e[35m'; yellow=$'\e[33m'; red=$'\e[31m'; reset=$'\e[0m'
+sep=" ${dim}|${reset} "
+usage_color=$green
+if [ -n "$used" ]; then
+  [ "${used%.*}" -ge 50 ] && usage_color=$yellow
+  [ "${used%.*}" -ge 80 ] && usage_color=$red
 fi
+
+out="${blue}${location}${reset}"
+[ -n "$branch_display" ] && out+="${sep}${green}${branch_display}${reset}"
+out+="${sep}${magenta}${model_display}${reset}${sep}${usage_color}${context_usage}${reset}"
+printf "%s" "$out"
