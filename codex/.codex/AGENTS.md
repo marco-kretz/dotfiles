@@ -17,6 +17,7 @@
 * Respect explicit review-only requests and approval boundaries. Continue independent, authorized work while a blocking question remains open.
 * Use plain language and concise paragraphs. Use lists or tables when they make the answer easier to understand.
 * Treat skills as workflow guidance, not additional approval requirements. Explicit user instructions take precedence over skill guidance; if a skill blocks authorized work, identify the file and the specific instruction.
+* Apply Ponytail to implementation simplicity. For response format and validation, follow this file and the user's request over Ponytail's code-first, fixed-length, and mandatory-new-test rules. Preserve relevant evidence and limitations; existing project checks can satisfy validation without adding a test.
 
 ## Problem Solving
 
