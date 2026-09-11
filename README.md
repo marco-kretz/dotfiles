@@ -15,17 +15,18 @@ sudo pacman -S stow starship
 ## Stow packages
 
 ```bash
-stow -t ~ git starship agents claude-code codex opencode pipewire voxtype openrgb ddev
+stow -t ~ git starship agents claude-code codex pi opencode pipewire voxtype openrgb ddev
 ```
 
 | Package | What it links |
 |---|---|
 | `git` | `~/.gitconfig` |
 | `starship` | `~/.config/starship.toml` |
-| `agents` | `~/.agents/AGENTS.md` (shared rules for all coding agents) and `~/.agents/skills/*` |
-| `claude-code` | `~/.claude/CLAUDE.md`, statusline script, `settings.json.example` |
-| `codex` | `~/.codex/{config.toml,AGENTS.md,agents/}` and a portable `config.toml.example` |
-| `opencode` | `~/.config/opencode/{opencode.json,tui.json,agents/}`, `AGENTS.md` symlinks to the shared one |
+| `agents` | `~/.agents/skills/*` (skills shared by all coding agents) |
+| `claude-code` | `~/.claude/CLAUDE.md`, native `agents/`, statusline script, `settings.json.example` |
+| `pi` | `~/.pi/agent/AGENTS.md`, local extension, `settings.json.example`; bootstrapped `settings.json` is git-ignored |
+| `codex` | `~/.codex/{config.toml,AGENTS.md}`, native `agents/*.toml`, and a portable `config.toml.example` |
+| `opencode` | `~/.config/opencode/{opencode.json,tui.json,agents/,AGENTS.md}` |
 | `pipewire` | MMX 300 EQ sink, pulse autogain block, WirePlumber drop-in that disables ALSA suspend-on-idle (broken stereo after standby) |
 | `voxtype` | `~/.config/voxtype/config.toml` |
 | `openrgb` | `sizes.ors`, `zWhite` / `zOff` profiles, Omarchy `theme-set` hook that syncs the LEDs to the theme accent, oneshot that applies it on graphical login, sleep hook (not stowed, see below) |
@@ -57,18 +58,56 @@ color for the LEDs than for the UI, drop a hex value into
 
 ### Agent skills
 
-Skills live in `agents/.agents/skills/` and are stowed to `~/.agents/skills/`, which is where
-[`npx skills`](https://github.com/vercel-labs/skills) installs to as well. To add a new skill,
-install it with `npx skills add <repo> -g`, then move the resulting directory from `~/.agents/skills/`
-into `agents/.agents/skills/` and run `stow -t ~ agents`.
-
-Claude Code reads `~/.claude/skills/`, so link them there once (idempotent, `--prune` removes dead links):
+Only skills are shared. Each harness owns its complete global instruction file;
+there is no common base file to import or read. Shared skills live in
+`agents/.agents/skills/`, stowed to `~/.agents/skills/`. Pi and Codex discover this
+directory directly. Claude Code uses symlinks into it:
 
 ```bash
+stow -t ~ agents claude-code codex pi
+./link-agent-skills.sh --dry-run --prune
 ./link-agent-skills.sh --prune
 ```
 
-The `omarchy` and `diagnose-crash` skills are shipped by Omarchy itself and are not tracked here.
+The linker preserves existing harness-specific files and symlinks. `--prune` removes
+only broken links created in its own `~/.agents/skills/<name>` format, not unrelated links.
+Do not add duplicate shared skills under Pi or Codex's private skill roots.
+
+Shared skills must not embed harness-specific agent names, model IDs, or tool APIs.
+Review routing belongs in the harness's own instruction file:
+
+| Harness | Global instructions (self-contained) | Subagent config | Independent PR review |
+|---|---|---|---|
+| Pi | `pi/.pi/agent/AGENTS.md` | `settings.json` → `subagents.agentOverrides` | Native `pi-subagents` `reviewer` |
+| Claude Code | `claude-code/.claude/CLAUDE.md` | `.claude/agents/*.md` | `code-quality-reviewer` |
+| Codex | `codex/.codex/AGENTS.md` | `.codex/agents/*.toml` | `reviewer` |
+
+The three files overlap in wording on purpose. Editing one does not change the others;
+keep a rule in the harness where it belongs instead of reintroducing a shared base.
+
+Pi's four configured core child roles inherit its global instruction file. Other
+children need the applicable rules in their task packet. Keep harness-specific skills
+and agents in their harness package, never in the shared skills root.
+
+Manual-only shared skills use both `disable-model-invocation: true` (Pi/Claude) and
+`agents/openai.yaml` with `policy.allow_implicit_invocation: false` (Codex).
+An explicit Codex `skills.config` disable still takes precedence.
+
+These customized shared skills are **dotfile-owned forks**, not upstream-managed
+installs. Their old `npx skills` update registrations were removed locally so a later
+bulk update cannot overwrite the customizations. To adopt another upstream skill,
+inspect it in a temporary directory, copy the selected files into the shared package,
+and Stow them; do not install over existing dotfile symlinks. Keep unmodified,
+package-managed skills separate and update those through their own manager.
+
+The retired `why` skill is removed. The `omarchy` and `diagnose-crash` skills remain
+Omarchy-owned and are not tracked here. Private harness skills remain untouched.
+
+Check the portable setup and safe linker behavior with:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s tests
+```
 
 ### Claude Code settings
 
@@ -77,6 +116,30 @@ The `omarchy` and `diagnose-crash` skills are shipped by Omarchy itself and are 
 ```bash
 cp claude-code/.claude/settings.json.example claude-code/.claude/settings.json
 ```
+
+### Pi settings
+
+Bootstrap the machine-local config before Stowing:
+
+```bash
+cp pi/.pi/agent/settings.json.example pi/.pi/agent/settings.json
+stow -t ~ pi
+```
+
+If existing files conflict, back them up and compare them first; do not use a blind
+`stow --adopt`. Pi's credentials, models cache, sessions, trust, npm packages, themes,
+and runtime artifacts stay outside this package. The template uses the built-in dark
+theme; keep machine-specific theme/model preferences in the ignored live settings.
+
+Extension versions are pinned to the inspected installation. Update pins deliberately
+in both live settings and the template, then install/update through Pi. Ponytail's
+always-on extension and general mode skill are excluded in Pi; only its focused
+review, audit, and debt skills are loaded. This does not change another harness's
+Ponytail configuration. Core shared rules already cover minimal changes and testing.
+
+After setup changes, restart Pi to refresh extensions, tools, skills, and agent overrides.
+Restart Codex after instruction/config changes; restart Claude Code after agent changes.
+Do not treat already-loaded instructions in an existing conversation as refreshed.
 
 ### Codex settings
 
@@ -90,8 +153,8 @@ cp codex/.codex/config.toml.example codex/.codex/config.toml
 stow -t ~ codex
 ```
 
-The Codex-specific `AGENTS.md` and `agents/*.toml` are tracked directly. Shared skills
-remain in the `agents` package. Install the enabled plugins separately on new machines.
+The Codex-specific `AGENTS.md` and the `agents/*.toml` subagent definitions are tracked
+directly. Shared skills remain in the `agents` package. Install the enabled plugins separately on new machines.
 Credentials, sessions, caches, and local approval rules remain outside the package.
 After changing portable settings, update `config.toml.example` as well.
 

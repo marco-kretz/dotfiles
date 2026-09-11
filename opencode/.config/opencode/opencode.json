@@ -18,6 +18,18 @@
           "cost": { "input": 0, "output": 0 }
         }
       }
+    },
+    "openrouter": {
+      "models": {
+        "deepseek/deepseek-v4.1-flash": {
+          "options": {
+            "provider": {
+              "order": ["fireworks", "novita"],
+              "allow_fallbacks": false
+            }
+          }
+        }
+      }
     }
   }
 }

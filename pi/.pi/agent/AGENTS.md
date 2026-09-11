@@ -1,4 +1,4 @@
-# Claude Code instructions
+# Pi instructions
 
 ## Working style
 
@@ -39,9 +39,11 @@ worktree's database: confirm the exact disposable project and uncommitted state 
 
 ## Delegation and review
 
-- Use Claude Code's native subagents, not Pi or Codex agent names and tool APIs.
-- Delegate large-file reads and multi-file searches to Explore when only a bounded conclusion is needed; use targeted reads for small questions.
-- For the shared `pull-request` skill, use `code-quality-reviewer` for a fresh, read-only review before creating a PR. Supply the actual base/head, diff scope, project rules, and validation evidence.
-- Keep implementation and publication decisions in the parent. Reviewers report findings; they do not edit or run test suites.
-- If the configured reviewer is unavailable or fails to launch, report the blocker rather than silently substituting another harness or an in-session review.
-- For DDEV projects, do not use EnterWorktree; follow the DDEV worktree rules above.
+- Use native `pi-subagents`; load its skill when delegation is warranted and discover available agents before launching.
+- Use `scout` for bounded read-only reconnaissance, `worker` for implementation, and `reviewer` for independent review. Reserve `oracle` for unresolved decisions, not routine reviews.
+- For the shared `pull-request` skill, use a fresh-context `reviewer` before creating a PR. Include the actual base/head, diff scope, relevant project rules, and validation evidence. Reviewers report findings and do not edit or run test suites.
+- Keep small fixes in the parent. For complex work, the parent owns scope, decisions, synthesis, final changes, and validation. Give children standalone task packets and one writer per checkout.
+- In the first complex review, use at most two read-only reviewers with distinct dimensions. After fixes, use at most one focused re-review of accepted findings and the changed blast radius. Stop after two rounds and escalate unresolved decisions.
+- The parent runs the final relevant validation after accepted fixes; rerun affected checks when further fixes or failures require it. Avoid redundant full-suite runs.
+- Child sessions inherit this global instruction file, but do not orchestrate or publish unless explicitly authorized. Do not create generic managed worktrees for DDEV projects; follow the DDEV worktree rules above.
+- If native delegation fails, report the exact blocker and workspace state; do not silently switch to Claude Code, Codex CLI, or another execution mode.

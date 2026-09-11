@@ -72,8 +72,9 @@ for skill_path in "$SRC"/*/; do
       (( ++skipped ))
       continue
     fi
-    echo "↻ $name: symlink points to $current, re-linking"
-    run rm "$target"
+    echo "✗ $name: existing symlink points to $current — preserved"
+    (( ++skipped ))
+    continue
   elif [[ -e "$target" ]]; then
     echo "✗ $name: real file/directory exists at $target — skipped"
     (( ++skipped ))
@@ -89,8 +90,8 @@ done
 if [[ $PRUNE -eq 1 ]]; then
   for link in "$DST"/*; do
     [[ -L "$link" ]] || continue
-    if [[ ! -e "$link" ]]; then
-      echo "✗ $(basename "$link"): dead symlink removed"
+    if [[ ! -e "$link" ]] && [[ "$(readlink "$link")" == "$SRC/$(basename "$link")" ]]; then
+      echo "✗ $(basename "$link"): dead shared-skill symlink removed"
       run rm "$link"
       (( ++pruned ))
     fi

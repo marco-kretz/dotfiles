@@ -5,9 +5,9 @@ argument-hint: "What will the next session be used for?"
 disable-model-invocation: true
 ---
 
-Write a handoff document summarising the current conversation so a fresh agent can continue the work. Save to the temporary directory of the user's OS - not the current workspace.
+Write a handoff document summarising the current conversation so a fresh agent can continue the work. Save to the harness's writable temp directory (`$TMPDIR` when set, otherwise the OS temp directory; a sandbox may make `/tmp` itself read-only) - not the current workspace - and print the path.
 
-Include a "suggested skills" section in the document, naming which skills the next agent should call the Skill tool for.
+Include a "suggested skills" section with relevant skill names and file paths. The next agent should load them through its own harness's supported mechanism; do not assume a Skill tool or matching subagent names.
 
 Do not duplicate content already captured in other artifacts (specs, plans, ADRs, issues, commits, diffs). Reference them by path or URL instead.
 
