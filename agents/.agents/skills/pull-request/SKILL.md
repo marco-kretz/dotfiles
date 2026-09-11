@@ -12,35 +12,14 @@ description: >-
 
 # Workflow
 
-Before creating the actual PR, delegate the review to the `code-quality-reviewer` agent —
-a fresh context judges the diff better than the session that wrote it. Fall back to running
-the `thermo-nuclear-code-quality-review` skill in-session if that agent is unavailable.
-If problems were found inform the user and ask for confirmation to apply the proposed fixes.
-
-Next, before drafting the PR description, gather context:
-
-```bash
-git status
-git log --oneline main...HEAD
-git diff main...HEAD
-```
-
-If the branch has no upstream, push it first:
-
-```bash
-git push -u origin HEAD
-```
-
-Then create the PR using the description format below:
-
-```bash
-gh pr create --title "<title>" --body "$(cat <<'EOF'
-<description>
-EOF
-)"
-```
-
-Return the PR URL when done.
+1. Distinguish a description-only request from permission to create a PR. A request to summarize or draft does not authorize pushing or creating anything.
+2. Read repository instructions, inspect `git status`, and establish the intended remote, head branch, and actual base branch; do not assume `main`. Inspect the commits and diff using `git log --oneline <base>...HEAD` and `git diff <base>...HEAD`. Uncommitted changes are not part of a published PR; do not commit them automatically.
+3. Before creating a PR, request a fresh, read-only review using the current harness's review routing in its global instructions. Pass the task, base/head, diff text or a readable diff artifact, relevant source paths, project rules, and validation evidence. Do not assume an agent name, model, or tool API from another harness. The reviewer reports findings and does not edit or run tests.
+4. If independent review is unavailable or fails, report the blocker and ask how to proceed. Do not silently replace it with self-review or switch harnesses. When strict code-quality review is requested, include [mkr-code-quality-review](../mkr-code-quality-review/SKILL.md) in the review task; otherwise use ordinary PR review.
+5. Present substantive findings. Apply fixes only within the user's authorized scope; ask before scope-expanding changes. Recheck affected validation and review changed areas when necessary.
+6. Draft the description below. For description-only requests, return it and stop; independent review is not required merely to write a summary.
+7. Only when PR creation is authorized, verify the destination and push the intended committed branch if necessary (never force-push). Use the available GitHub CLI workflow for GitHub; use the host's supported workflow for other providers. Do not assume GitHub for a GitLab merge request.
+8. Create the PR with the verified base/head, title, and description, then return its URL. Never merge or deploy as part of this skill.
 
 ---
 

@@ -1,11 +1,11 @@
 ---
 name: deslop
-description: Remove AI-generated code slop and clean up code style
+description: Remove unnecessary AI-generated code from a requested diff while preserving behavior and local style.
 ---
 
 # Remove AI code slop
 
-Check the diff against main and remove AI-generated slop introduced in the branch.
+Inspect the requested diff and surrounding code. For branch-wide cleanup, establish the actual base branch. Edit only when cleanup is authorized; report findings for review-only requests.
 
 ## Focus Areas
 
@@ -17,6 +17,6 @@ Check the diff against main and remove AI-generated slop introduced in the branc
 
 ## Guardrails
 
-- Keep behavior unchanged unless fixing a clear bug.
+- Preserve behavior, including validation and error handling at external boundaries. Report bugs separately unless a fix is authorized.
 - Prefer minimal, focused edits over broad rewrites.
 - Keep the final summary concise (1-3 sentences).
