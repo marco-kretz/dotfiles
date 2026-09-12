@@ -15,7 +15,7 @@ sudo pacman -S stow starship
 ## Stow packages
 
 ```bash
-stow -t ~ git starship agents claude-code codex pi opencode pipewire voxtype openrgb ddev
+stow -t ~ git starship agents claude-code codex pi opencode pipewire voxtype openrgb ddev hypr
 ```
 
 | Package | What it links |
@@ -31,6 +31,7 @@ stow -t ~ git starship agents claude-code codex pi opencode pipewire voxtype ope
 | `voxtype` | `~/.config/voxtype/config.toml` |
 | `openrgb` | `sizes.ors`, `zWhite` / `zOff` profiles, Omarchy `theme-set` hook that syncs the LEDs to the theme accent, oneshot that applies it on graphical login, sleep hook (not stowed, see below) |
 | `ddev` | `~/.ddev/commands/host/worktree` (`ddev worktree <branch>`: new git worktree as its own DDEV project, incl. DB copy) |
+| `hypr` | My Hyprland overrides in `~/.config/hypr/`: `hyprland.lua`, `bindings.lua`, `autostart.lua`, `workspaces.lua`, `monitors.lua`, `input.lua`. Files still at the Omarchy default (`looknfeel.lua`, `hyprsunset.conf`, `xdph.conf`, `.luarc.json`) stay untracked so package updates keep improving them. |
 
 After stowing `pipewire`:
 
