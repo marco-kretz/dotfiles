@@ -14,7 +14,7 @@ name="${DDEV_PROJECT}-${slug}"
 git -C "$DDEV_APPROOT" worktree add "$dir" "$branch" \
   || git -C "$DDEV_APPROOT" worktree add -b "$branch" "$dir"
 
-# gitignored von ddev -> ueberschreibt name: aus config.yaml, ohne den Baum dreckig zu machen
+# gitignored by ddev -> overrides name: from config.yaml without dirtying the tree
 printf 'name: %s\n' "$name" > "$dir/.ddev/config.local.yaml"
 
 if [ "${DDEV_WORKTREE_NO_DB:-}" != "true" ]; then
@@ -26,4 +26,4 @@ else
   ( cd "$dir" && ddev start )
 fi
 
-echo "-> $dir  (ddev delete -O $name && git worktree remove $dir  zum Aufraeumen)"
+echo "-> $dir  (ddev delete -O $name && git worktree remove $dir  to clean up)"
