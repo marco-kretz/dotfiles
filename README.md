@@ -74,6 +74,17 @@ The linker preserves existing harness-specific files and symlinks. `--prune` rem
 only broken links created in its own `~/.agents/skills/<name>` format, not unrelated links.
 Do not add duplicate shared skills under Pi or Codex's private skill roots.
 
+#### `openai-image`
+
+The `openai-image` skill needs an OpenAI API key. It is not part of this repo — create
+it once per machine:
+
+```bash
+install -m 600 /dev/null ~/.config/openai.env
+printf 'export OPENAI_API_KEY=sk-...\n' > ~/.config/openai.env
+echo '[ -f ~/.config/openai.env ] && . ~/.config/openai.env' >> ~/.bashrc
+```
+
 Shared skills must not embed harness-specific agent names, model IDs, or tool APIs.
 Review routing belongs in the harness's own instruction file:
 
