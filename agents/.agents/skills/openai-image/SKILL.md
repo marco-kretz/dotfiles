@@ -19,9 +19,11 @@ Pick flare unless the task is a detailed edit or the user asks for maximum quali
 
 ## Usage
 
+Resolve `<skill-directory>` to the directory containing this loaded `SKILL.md`.
+
 ```bash
 # generate
-python3 ~/.claude/skills/openai-image/gen_image.py "a red fox in fog" -o fox.png
+python3 <skill-directory>/gen_image.py "a red fox in fog" -o fox.png
 
 # high quality, portrait, transparent background, webp
 ... "logo of an owl" -m sunburst -q high -s 1024x1536 -b transparent -f webp -o owl.webp

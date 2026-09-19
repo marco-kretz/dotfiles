@@ -112,7 +112,7 @@ inspect it in a temporary directory, copy the selected files into the shared pac
 and Stow them; do not install over existing dotfile symlinks. Keep unmodified,
 package-managed skills separate and update those through their own manager.
 
-The retired `why` skill is removed. The `omarchy` and `diagnose-crash` skills remain
+The retired `why` and `verify-this` skills are removed. The `omarchy` and `diagnose-crash` skills remain
 Omarchy-owned and are not tracked here. Private harness skills remain untouched.
 
 Check the portable setup and safe linker behavior with:
@@ -169,5 +169,15 @@ The Codex-specific `AGENTS.md` and the `agents/*.toml` subagent definitions are 
 directly. Shared skills remain in the `agents` package. Install the enabled plugins separately on new machines.
 Credentials, sessions, caches, and local approval rules remain outside the package.
 After changing portable settings, update `config.toml.example` as well.
+
+Codex does not use Ponytail or the retired `astra-orchestrator` skill. Agent defaults
+live in the config; review routing lives in `AGENTS.md` and `agents/reviewer.toml`.
+Browser MCP plugins are disabled. Browser checks use CLI tools headlessly with
+`/usr/bin/chromium`; prefer existing project tests. The recommended exploratory
+addition is `@playwright/cli` (`playwright-cli`), installed separately if needed.
+Its global `~/.playwright/cli.config.json` can set `browser.browserName` to `chromium`
+and `browser.launchOptions` to `{"headless": true, "executablePath": "/usr/bin/chromium"}`.
+Read focused text snapshots; take screenshots only when visual evidence is needed.
+The existing `~/.local/bin/playwright` wrapper is managed separately and unchanged.
 
 ~MK

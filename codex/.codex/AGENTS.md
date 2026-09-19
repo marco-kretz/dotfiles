@@ -1,74 +1,51 @@
 # Codex Global Rules
 
-These are the complete global rules for Codex. Applicable project instructions still
-apply and take precedence where they conflict.
+Applicable project instructions take precedence where they conflict.
 
-## Review routing
+## Working style
 
-* For the shared `pull-request` skill, delegate to the `reviewer` agent defined in `~/.codex/agents/reviewer.toml` with a fresh read-only review task.
-* Supply the actual base/head, diff scope, relevant rules, and validation evidence. Request findings only, with no edits or test execution.
-* If independent review is unavailable or fails, report the blocker before creating the PR; do not switch to another harness or claim self-review was independent.
-
-## Working Style
-
-* Be concise and explicit.
-* Inspect relevant code before making non-trivial changes.
-* For non-trivial work, form a short plan before acting.
-* Preserve project conventions.
-* Prefer minimal diffs and the simplest correct fix.
-* Before introducing a new mechanism, check for an existing option, flag, attribute, hook, extension point, or documented API.
-* Avoid unnecessary dependencies, renames, abstractions, and formatting churn.
-* Do not claim verification you did not perform.
-* Run the smallest relevant checks when possible.
+* Inspect relevant code and callers before non-trivial changes; form a short plan.
+* Complete authorized work end to end. Resolve routine details from context; ask only when missing information materially affects correctness, scope, or risk.
+* Preserve existing user changes and respect review-only requests and approval boundaries. Continue independent authorized work while a blocking question remains open.
+* Use plain language and concise paragraphs. Report the outcome, relevant checks, and material limitations; never claim verification you did not perform.
 * Flag risky or destructive operations before executing or recommending them.
 * Use Conventional Commits for commit messages.
-* Complete authorized work end to end. Resolve routine details from context and project conventions; ask only when missing information materially affects correctness, scope, or risk.
-* Respect explicit review-only requests and approval boundaries. Continue independent, authorized work while a blocking question remains open.
-* Use plain language and concise paragraphs. Use lists or tables when they make the answer easier to understand.
-* Treat skills as workflow guidance, not additional approval requirements. Explicit user instructions take precedence over skill guidance; if a skill blocks authorized work, identify the file and the specific instruction.
+* Treat skills as workflow guidance, not additional approval requirements. Explicit user instructions take precedence; identify the file and instruction if a skill blocks authorized work.
 
-## Problem Solving
+## Implementation and tools
 
-* Do not over-engineer small problems.
-* If an approach fails twice, stop repeating it. Reassess assumptions, consult relevant documentation when useful, and choose the simplest in-scope alternative.
-* When third-party behavior causes a problem, prefer the library's documented configuration, opt-out, hook, extension point, or skip mechanism over building a compensation layer around it.
+* Make the smallest correct change within scope. Preserve project conventions; avoid unrelated cleanup, speculative abstractions, dependencies, and formatting churn.
+* Before adding a mechanism, check existing code, standard libraries, native features, and documented options, hooks, or extension points.
+* Prefer installed CLI tools over MCPs; use `gh` for GitHub and project DDEV commands where configured.
+* Use the project's package manager, lockfile, runtime versions, and documented commands. Do not install or update global tools as part of routine checks.
+* If an approach fails twice, reassess assumptions and consult relevant documentation before choosing another approach.
+* Fix shared root causes rather than adding compensation at individual callers. Validate untrusted input at external boundaries.
+* Add comments only for non-obvious reasons, constraints, or invariants.
+* PHP and TypeScript: strict typing and features supported by the project's version. JavaScript: ES6+ unless the project requires otherwise.
 
-## Code Changes
+## Validation and browser testing
 
-* Make only changes required for the task.
-* Avoid unrelated cleanup.
-* Do not introduce abstractions beyond what the task requires.
-* Avoid comments and docstrings that merely restate the code.
-* Add comments only when the reason is non-obvious, such as a hidden constraint, workaround, or subtle invariant.
-* Avoid speculative handling of impossible internal states.
-* Validate untrusted input and external boundaries appropriately.
+* Run targeted existing tests, static analysis, linting, formatting, or builds relevant to the change. Complete required project checks and fix failures caused by your changes.
+* Add tests when they verify behavior or prevent regression, using the project's existing test approach. Broaden or repeat checks only for new changes, failures, or concrete unresolved risks.
+* For UI changes, exercise the affected flow headlessly through CLI tools with `/usr/bin/chromium`; do not use browser MCPs or attach to personal browser sessions.
+* Prefer existing project browser tests. For exploratory checks, use an installed Playwright CLI when available. Keep outputs focused; inspect relevant snapshot excerpts and use screenshots for visual questions.
+* Check relevant desktop/mobile layouts, keyboard interaction, and console errors. Screenshots alone do not prove functional correctness; use interactions and assertions.
+* Take application URLs, start commands, and test accounts from project instructions. Report browser checks that could not run.
 
-## Validation
+## Review and delegation
 
-* Prefer targeted tests, static analysis, linting, formatting, or build checks relevant to the changed code.
-* Prefer targeted checks before expensive project-wide checks.
-* Add tests only when they meaningfully verify behavior or prevent regression; use the project's existing test approach rather than introducing a separate harness for a small change.
-* Once relevant checks pass, broaden or repeat them only for new changes, failures, or concrete unresolved risks. Complete required project checks.
-* Fix failures caused by your changes.
-* Clearly report checks that could not be run.
-
-## Typing
-
-* PHP and TypeScript: strict typing and modern features supported by the project's version. JavaScript: ES6+ unless the project requires otherwise.
-
-## Harness boundaries
-
-* Shared skills contain the workflow, not harness-specific agent names, model IDs, or tool APIs. Use Codex's own review and delegation routing above.
-* Delegate only when independent review, bounded research, isolation, or context reduction materially helps. Keep small tasks local.
-* One writer per checkout; reviewers inspect and report without editing. Give children explicit scope, applicable project rules, and approval boundaries.
-* Never assume another harness's agents, tools, MCP servers, or permissions are available. Do not switch harnesses as a fallback without approval.
+* Before creating a PR with the shared `pull-request` skill, request a fresh read-only review from `~/.codex/agents/reviewer.toml`. Description-only requests do not require independent review.
+* Supply actual base/head, diff scope, relevant rules, and validation evidence. Request findings only, with no edits or test execution.
+* If independent review is unavailable or fails, report the blocker before creating the PR; do not claim self-review was independent or switch harnesses as a fallback.
+* Delegate only when independent review, bounded research, isolation, or context reduction materially helps. Keep small tasks local; model defaults belong in config and agent definitions.
+* One writer per checkout; reviewers inspect without editing. Give children explicit scope, applicable rules, and approval boundaries.
+* Shared skills contain workflows, not harness-specific agent names, model IDs, or tool APIs. Never assume another harness's capabilities or permissions are available.
 
 ## DDEV + git worktrees
 
-In a DDEV project (`.ddev/config.yaml` present), create worktrees with `ddev worktree <branch>`,
-not plain `git worktree add` or a generic worktree tool. It sets the project name
-in `.ddev/config.local.yaml` (gitignored), starts the project, and copies the DB.
-Never use `ddev config --project-name` for this; it changes committed configuration.
-Worktree creation and DB copying must be within the authorized task. Cleanup destroys the
-worktree's database: confirm the exact disposable project and uncommitted state before
-`ddev delete -O <name> && git worktree remove <dir>`.
+In a DDEV project (`.ddev/config.yaml` present), create worktrees with `ddev worktree <branch>`.
+It sets the project name in gitignored `.ddev/config.local.yaml`, starts the project,
+and copies the DB. Never use `ddev config --project-name`; it changes committed configuration.
+Worktree creation and DB copying must be within the authorized task. Cleanup destroys
+the worktree's database: confirm the exact disposable project and uncommitted state
+before `ddev delete -O <name> && git worktree remove <dir>`.
