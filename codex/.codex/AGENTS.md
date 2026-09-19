@@ -28,7 +28,7 @@ Applicable project instructions take precedence where they conflict.
 * Run targeted existing tests, static analysis, linting, formatting, or builds relevant to the change. Complete required project checks and fix failures caused by your changes.
 * Add tests when they verify behavior or prevent regression, using the project's existing test approach. Broaden or repeat checks only for new changes, failures, or concrete unresolved risks.
 * For UI changes, exercise the affected flow headlessly through CLI tools with `/usr/bin/chromium`; do not use browser MCPs or attach to personal browser sessions.
-* Prefer existing project browser tests. For exploratory checks, use an installed Playwright CLI when available. Keep outputs focused; inspect relevant snapshot excerpts and use screenshots for visual questions.
+* Prefer existing project browser tests. For exploratory checks, use `playwright-cli` with a named session per task and close it afterward. Keep outputs focused with `find`, snapshot excerpts, or `--raw`; use screenshots for visual questions.
 * Check relevant desktop/mobile layouts, keyboard interaction, and console errors. Screenshots alone do not prove functional correctness; use interactions and assertions.
 * Take application URLs, start commands, and test accounts from project instructions. Report browser checks that could not run.
 

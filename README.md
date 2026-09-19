@@ -15,7 +15,7 @@ sudo pacman -S stow starship
 ## Stow packages
 
 ```bash
-stow -t ~ git starship agents claude-code codex pi opencode pipewire voxtype openrgb ddev hypr
+stow -t ~ git starship agents claude-code codex pi opencode pipewire voxtype openrgb ddev hypr playwright
 ```
 
 | Package | What it links |
@@ -26,6 +26,7 @@ stow -t ~ git starship agents claude-code codex pi opencode pipewire voxtype ope
 | `claude-code` | `~/.claude/CLAUDE.md`, native `agents/`, statusline script, `settings.json.example` |
 | `pi` | `~/.pi/agent/AGENTS.md`, local extension, `settings.json.example`; bootstrapped `settings.json` is git-ignored |
 | `codex` | `~/.codex/{config.toml,AGENTS.md}`, native `agents/*.toml`, and a portable `config.toml.example` |
+| `playwright` | `~/.playwright/cli.config.json` (headless system Chromium for Playwright CLI) |
 | `opencode` | `~/.config/opencode/{opencode.json,tui.json,agents/,AGENTS.md}` |
 | `pipewire` | MMX 300 EQ sink, pulse autogain block, WirePlumber drop-in that disables ALSA suspend-on-idle (broken stereo after standby) |
 | `voxtype` | `~/.config/voxtype/config.toml` |
@@ -173,11 +174,27 @@ After changing portable settings, update `config.toml.example` as well.
 Codex does not use Ponytail or the retired `astra-orchestrator` skill. Agent defaults
 live in the config; review routing lives in `AGENTS.md` and `agents/reviewer.toml`.
 Browser MCP plugins are disabled. Browser checks use CLI tools headlessly with
-`/usr/bin/chromium`; prefer existing project tests. The recommended exploratory
-addition is `@playwright/cli` (`playwright-cli`), installed separately if needed.
-Its global `~/.playwright/cli.config.json` can set `browser.browserName` to `chromium`
-and `browser.launchOptions` to `{"headless": true, "executablePath": "/usr/bin/chromium"}`.
-Read focused text snapshots; take screenshots only when visual evidence is needed.
+`/usr/bin/chromium`; prefer existing project tests. For exploratory checks, install
+Playwright CLI through mise (verified with `@playwright/cli` 0.1.21):
+
+```bash
+mise use -g npm:@playwright/cli@0.1.21
+stow -t ~ playwright
+playwright-cli -s=my-task open https://your-project.ddev.site
+playwright-cli -s=my-task find "relevant label"
+playwright-cli -s=my-task close
+```
+
+The global config uses headless system Chromium with its sandbox enabled and an
+isolated in-memory profile. No browser download, browser MCP, or personal browser
+session is needed. Project `.playwright/cli.config.json` files and CLI options can
+override these defaults; `playwright-cli -s=my-task config-print` shows the resolved
+configuration for an open session.
+Use a named session per task and close it afterward. Read targeted `find` results
+or snapshot excerpts; use `--raw` for focused result values and screenshots only
+when visual evidence is needed. Inspect error/result output as well as exit status:
+the CLI can report a browser error with exit code 0. Keep repeatable regression
+tests in the project.
 The existing `~/.local/bin/playwright` wrapper is managed separately and unchanged.
 
 ~MK
