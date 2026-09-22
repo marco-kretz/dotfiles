@@ -1,0 +1,155 @@
+#!/usr/bin/env python3
+"""Sortiert Abschnitte aus 00 Inbox/Inbox.md per TypeSafe (Jev) in passende Vault-Notizen.
+
+Standard ist ein Probelauf. Mit --apply wird verschoben.
+Unsichere Treffer sortiert danach ein headless `claude` (Sonnet, low effort) nach AGENTS.md ein.
+Zugangsdaten verlassen den Rechner nie: Jev sieht nur eine geschwärzte Fassung, das Original
+hängt das Skript lokal an. Unsichere Abschnitte mit Zugangsdaten bleiben in der Inbox.
+"""
+import datetime
+import json
+import os
+import re
+import subprocess
+import sys
+import urllib.request
+from pathlib import Path
+
+VAULT = Path(os.environ.get("VAULT", Path.home() / "Documents/Notizen"))
+INBOX = VAULT / "00 Inbox/Inbox.md"
+PROTOKOLL = VAULT / "99 Meta/Inbox-Protokoll.md"
+REPORT = VAULT / "99 Meta/Zugangsdaten-Report.md"
+TARGET_DIRS = ["20 Kunden", "30 Bereiche", "40 Wissen", "50 Privat"]
+MIN_PROB = 0.6
+
+SECRET = re.compile(
+    r"(?im)^\W*(pass(wort|word)?|pw|pwd|token|secret|api[-_ ]?key|key)\s*:|#key=|-----BEGIN"
+)
+SECRET_VALUE = re.compile(
+    r"(?im)^(\W*(?:pass(?:wort|word)?|pw|pwd|token|secret|api[-_ ]?key|key)\s*:).*$"
+)
+PRIVATE_KEY = re.compile(r"-----BEGIN[^\n]*-----.*?-----END[^\n]*-----", re.S)
+CONTINUATION = re.compile(r"^(\w+:\s|\w+:$|https?://\S+$)")
+HEADING = re.compile(r"^#+ |^.+\n[-=]{3,}$")
+
+
+def split_sections(body):
+    blocks = [b.strip("\n") for b in re.split(r"\n\s*\n", body) if b.strip()]
+    sections = []
+    for b in blocks:
+        prev = sections[-1] if sections else None
+        if prev and (prev.endswith(":") or HEADING.match(prev) and "\n" not in prev or CONTINUATION.match(b)):
+            sections[-1] = prev + "\n\n" + b
+        else:
+            sections.append(b)
+    return sections
+
+
+def redact(s):
+    s = PRIVATE_KEY.sub("[GESCHWÄRZT: Schlüssel]", s)
+    s = SECRET_VALUE.sub(r"\1 [GESCHWÄRZT]", s)
+    return re.sub(r"#key=\S+", "#key=[GESCHWÄRZT]", s)
+
+
+def read_inbox():
+    text = INBOX.read_text()
+    m = re.match(r"(---\n.*?\n---\n(?:# Inbox\n)?)(.*)", text, re.S)
+    return (m.group(1), m.group(2)) if m else ("", text)
+
+
+def ask_jev(sections, targets):
+    today = datetime.date.today().isoformat()
+    criteria = {t: None for t in targets}
+    criteria["journal"] = f"Arbeitsergebnis, Meeting, Entscheidung oder Status ohne festen Ort → Tagesjournal {today}"
+    criteria["unklar"] = "Keine Notiz passt sicher; Kunde oder Thema ist nicht eindeutig"
+    questions = {
+        str(i): {
+            "type": "choice",
+            "instructions": {
+                "vault": "Obsidian-Vault eines selbstständigen Webentwicklers (Firma codebites). "
+                "20 Kunden/<Kunde>/_<Kunde>.md sind Kunden-Hubs, Kleinkunden liegen in 20 Kunden/Klein/. "
+                "Schreibweisen im Eintrag können abweichen.",
+                "question": f"In welche Notiz gehört der Inbox-Eintrag `sections[{i}]`?",
+            },
+            "criteria": criteria,
+        }
+        for i in range(len(sections))
+    }
+    req = urllib.request.Request(
+        "https://api.typesafe.ai/v1/systemone",
+        data=json.dumps({"state": {"sections": sections}, "model": "jev-latest", "questions": questions}).encode(),
+        headers={"Authorization": f"Bearer {os.environ['TYPESAFE_API_KEY']}", "Content-Type": "application/json"},
+    )
+    with urllib.request.urlopen(req, timeout=120) as r:
+        answers = json.load(r)["answers"]
+    return [(answers[str(i)]["choice"], answers[str(i)]["probabilities"][answers[str(i)]["choice"]]) for i in range(len(sections))]
+
+
+def append(path, text):
+    with path.open("a") as f:
+        f.write(("" if path.read_text().endswith("\n") else "\n") + "\n" + text + "\n")
+
+
+def main():
+    apply = "--apply" in sys.argv
+    head, body = read_inbox()
+    sections = split_sections(body)
+    targets = sorted(str(p.relative_to(VAULT)) for d in TARGET_DIRS for p in (VAULT / d).rglob("*.md"))
+    verdicts = dict(zip(sections, ask_jev([redact(s) for s in sections], targets))) if sections else {}
+
+    today = datetime.date.today().isoformat()
+    keep, log, unclear = [], [], []
+    for s in sections:
+        secret = bool(SECRET.search(s))
+        title = redact(s.splitlines()[0])[:70]
+        target, p = verdicts[s]
+        if secret and (target in ("unklar", "journal") or p < MIN_PROB):
+            print(f"🔒 bleibt  {title}  ({target}, {p:.2f})")
+            keep.append(s)
+            continue
+        if target == "unklar" or p < MIN_PROB:
+            print(f"?  Sonnet  {title}  ({target}, {p:.2f})")
+            keep.append(s)
+            unclear.append(f"Jev-Tipp: {target} ({p:.2f})\n{s}")
+            continue
+        path = VAULT / f"10 Journal/{today[:4]}/{today}.md" if target == "journal" else VAULT / target
+        print(f"{'🔒' if secret else '→'} {p:.2f}  {title}\n          {path.relative_to(VAULT)}")
+        if apply:
+            if target == "journal" and not path.exists():
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(f'---\ntyp: journal\ndatum: "{today}"\ntags:\n  - journal\n---\n')
+            append(path, s)
+            entry = f"[Zugangsdaten: {title}]" if secret else f'"{title}"'
+            log.append(f"- {entry} → {path.relative_to(VAULT)} (z-vault-sort, p={p:.2f})")
+            if secret:
+                append(REPORT, f"- [[{path.stem}]] — {title} (z-vault-sort, {today})")
+
+    if not apply:
+        print("\nProbelauf. Mit --apply verschieben.")
+        return
+    if log:
+        INBOX.write_text(head + "\n\n".join(keep) + "\n")
+        append(PROTOKOLL, f"## {today}\n" + "\n".join(log))
+    if unclear:
+        ask_claude(unclear)
+
+
+def ask_claude(entries):
+    prompt = (
+        "Sortiere genau diese Einträge aus `00 Inbox/Inbox.md` nach den Regeln in AGENTS.md ein. "
+        "Der Jev-Tipp ist nur ein unsicherer Hinweis. Wenn keine bestehende Notiz passt, darfst du neue Notizen "
+        "und Ordner anlegen, passend zur bestehenden Struktur. Entferne jeden einsortierten Eintrag aus Inbox.md "
+        "und protokolliere ihn in `99 Meta/Inbox-Protokoll.md`. Was du nicht sicher zuordnen kannst, bleibt in der "
+        "Inbox. Andere Inbox-Einträge nicht anfassen. Antworte am Ende mit einer kurzen Zusammenfassung.\n\n"
+        + "\n\n=====\n\n".join(entries)
+    )
+    print("\nSonnet sortiert die unsicheren Einträge …", flush=True)
+    subprocess.run(
+        ["claude", "-p", prompt, "--model", "sonnet", "--effort", "low",
+         "--permission-mode", "acceptEdits", "--allowedTools", "Read,Edit,Write,Glob,Grep"],
+        cwd=VAULT, check=True,
+    )
+
+
+if __name__ == "__main__":
+    main()

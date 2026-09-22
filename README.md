@@ -15,11 +15,12 @@ sudo pacman -S stow starship
 ## Stow packages
 
 ```bash
-stow -t ~ git starship agents claude-code codex pi opencode pipewire voxtype openrgb ddev hypr playwright
+stow -t ~ bin git starship agents claude-code codex pi opencode pipewire voxtype openrgb ddev hypr playwright
 ```
 
 | Package | What it links |
 |---|---|
+| `bin` | `~/.local/bin/z-vault-sort` (sorts the Obsidian inbox into notes via TypeSafe Jev; dry run by default, `--apply` moves) |
 | `git` | `~/.gitconfig` |
 | `starship` | `~/.config/starship.toml` |
 | `agents` | `~/.agents/skills/*` (skills shared by all coding agents) |
