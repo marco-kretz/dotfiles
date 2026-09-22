@@ -1,18 +1,22 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_CODE_ENABLE_FUNCTION_HOOKS": "1",
+    "PONYTAIL_DEFAULT_MODE": "lite",
+    "TYPESAFE_API_KEY": "<your-typesafe-api-key>"
+  },
   "attribution": {
     "commit": "",
     "pr": "",
     "sessionUrl": false
   },
-  "model": "claude-fable-5-1[1m]",
+  "model": "opus[1m]",
   "statusLine": {
     "type": "command",
     "command": "bash /home/marco/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
-    "chrome-devtools-mcp@claude-plugins-official": true,
     "ponytail@ponytail": true
   },
   "extraKnownMarketplaces": {
@@ -23,9 +27,22 @@
       }
     }
   },
+  "outputStyle": "Concise",
+  "sandbox": {
+    "enabled": true
+  },
   "effortLevel": "medium",
+  "modelSettings": {
+    "claude-fable-5-1": {
+      "effortLevel": "medium"
+    },
+    "claude-opus-5": {
+      "effortLevel": "medium"
+    }
+  },
   "tui": "fullscreen",
   "theme": "custom:omarchy",
   "inputNeededNotifEnabled": true,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "promptSuggestionEnabled": false
 }
