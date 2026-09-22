@@ -38,3 +38,6 @@ o.bind("SUPER + SHIFT + M", "Omarchy Spotify", "omarchy shell -q quickshell.spot
 
 -- Obsidian on a special workspace, reachable from anywhere with SUPER+N.
 o.bind("SUPER + N", "Toggle Obsidian", hl.dsp.workspace.toggle_special("obsidian"))
+
+-- Spotify on a special workspace, reachable from anywhere with SUPER+M.
+o.bind("SUPER + M", "Toggle Spotify", hl.dsp.workspace.toggle_special("spotify"))

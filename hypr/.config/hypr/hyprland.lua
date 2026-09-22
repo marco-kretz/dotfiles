@@ -54,3 +54,6 @@ hl.config({
 
 -- Obsidian always lives in the "obsidian" special workspace (SUPER+N).
 o.window({ class = "^md\\.obsidian\\.Obsidian$" }, { workspace = "special:obsidian silent" })
+
+-- Spotify always lives in the "spotify" special workspace (SUPER+M).
+o.window({ class = "^spotify$" }, { workspace = "special:spotify silent" })

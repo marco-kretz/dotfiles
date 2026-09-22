@@ -6,3 +6,6 @@ o.exec_on_start("xrandr --output DP-2 --primary")
 
 -- Start Obsidian so it lands in its special workspace.
 o.launch_on_start("obsidian")
+
+-- Start Spotify so it lands in its special workspace.
+o.launch_on_start("spotify")
