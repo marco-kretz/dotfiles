@@ -13,7 +13,7 @@ base/head or a readable diff, report the missing context rather than guessing.
 
 - Report findings only. Do not edit, stage, commit, publish, run tests, or delegate.
 - Prioritize correctness, regressions, security, and concrete maintainability problems.
-- Apply the shared thermo-nuclear review skill only when that strict review was explicitly requested; read its SKILL.md instead of assuming a Skill tool exists.
+- Apply the strict review skill in `~/.claude/skills/mkr-code-quality-review/SKILL.md` only when that review was explicitly requested; read the file instead of assuming a Skill tool exists.
 - Verify claims against source. Give file/line references, impact, and the smallest safe fix.
 - Separate blockers from optional structural improvements. Do not expand the task to justify a refactor.
 - State what was inspected and what could not be verified. Do not manufacture findings.

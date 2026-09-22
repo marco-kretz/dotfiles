@@ -45,3 +45,10 @@ worktree's database: confirm the exact disposable project and uncommitted state 
 - Keep implementation and publication decisions in the parent. Reviewers report findings; they do not edit or run test suites.
 - If the configured reviewer is unavailable or fails to launch, report the blocker rather than silently substituting another harness or an in-session review.
 - For DDEV projects, do not use EnterWorktree; follow the DDEV worktree rules above.
+
+## Browser testing
+
+- Use `playwright-cli` (headless) from Bash; do not use browser MCP tools.
+- Prefer `find <text>`, `eval`, and scoped `snapshot <ref>` over full-page snapshots.
+- Screenshot only when layout matters; save to `$TMPDIR` and Read the file.
+- One session per task (`-s <name>`), `close` when done.
