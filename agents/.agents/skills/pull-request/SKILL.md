@@ -1,13 +1,9 @@
 ---
 name: pull-request
 description: >-
-  Use this skill whenever the user asks to create a pull request (PR), merge
-  request, or when preparing changes for code review. This includes generating
-  PR descriptions, summarizing code changes for review, or formatting
-  contributions to be submitted to a repository.
-
-  Also use when: drafting PR summaries, writing change descriptions for GitHub
-  or GitLab, explaining what a branch changes, or preparing a patch for review.
+  Create a pull request or merge request, or draft its description, for the
+  current branch's changes. Use when the user asks to open a PR/MR or to write
+  a PR summary or change description for review on GitHub or GitLab.
 ---
 
 # Workflow
@@ -34,7 +30,7 @@ Provide a concise overview of the most important changes introduced by this
 pull request. Focus on the "what" — the key modifications, additions, or
 removals — so a reviewer can grasp the scope at a glance.
 
-- Keep it to 2–4 bullet points or a short paragraph.
+- Keep it to a few bullets or a short paragraph.
 - Highlight only the changes that affect behavior, public APIs, or
   architecture.
 - Omit trivial formatting or refactoring unless it is the primary purpose of
@@ -57,8 +53,7 @@ Propose the approach taken to tackle the problem outlined above. Explain the
 "how" and "why" of the fix or implementation.
 
 - Describe the chosen strategy and any trade-offs considered.
-- Mention alternative approaches that were evaluated and why this one was
-  selected.
+- If alternative approaches were considered, say why this one was chosen.
 - If applicable, note any follow-up work, known limitations, or areas that
   need extra scrutiny during review.
 
@@ -66,10 +61,8 @@ Propose the approach taken to tackle the problem outlined above. Explain the
 
 ## Usage Notes
 
-- Maintain a professional, neutral tone throughout.
 - Use present tense (e.g., "Fixes race condition" rather than "Fixed race
   condition").
-- Keep the total description scannable; reviewers should understand the PR
-  within 30 seconds.
+- Keep the total description scannable.
 - If the PR is a work in progress, mark it as draft and add a **WIP**
   notice at the top.

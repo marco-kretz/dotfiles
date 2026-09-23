@@ -19,4 +19,4 @@ Inspect the requested diff and surrounding code. For branch-wide cleanup, establ
 
 - Preserve behavior, including validation and error handling at external boundaries. Report bugs separately unless a fix is authorized.
 - Prefer minimal, focused edits over broad rewrites.
-- Keep the final summary concise (1-3 sentences).
+- Keep the final summary brief.
