@@ -41,3 +41,6 @@ o.bind("SUPER + N", "Toggle Obsidian", hl.dsp.workspace.toggle_special("obsidian
 
 -- Spotify on a special workspace, reachable from anywhere with SUPER+M.
 o.bind("SUPER + M", "Toggle Spotify", hl.dsp.workspace.toggle_special("spotify"))
+
+-- Next to the system menu (SUPER+ESCAPE): confirm, then reboot once into Windows.
+o.bind("SUPER + SHIFT + ESCAPE", "Reboot into Windows", "omarchy-reboot-windows")
