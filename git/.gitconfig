@@ -38,3 +38,6 @@
   cmd = code --wait --diff $LOCAL $REMOTE
 [init]
 	defaultBranch = main
+[include]
+	# Machine-specific overrides (e.g. from the wsl package); ignored if missing
+	path = ~/.gitconfig.wsl

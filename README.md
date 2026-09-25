@@ -34,7 +34,7 @@ stow -t ~ bin git starship agents claude-code codex pi opencode pipewire voxtype
 | `openrgb` | `sizes.ors`, `zWhite` / `zOff` profiles, Omarchy `theme-set` hook that syncs the LEDs to the theme accent, oneshot that applies it on graphical login, sleep hook (not stowed, see below) |
 | `ddev` | `~/.ddev/commands/host/worktree` (`ddev worktree <branch>`: new git worktree as its own DDEV project, incl. DB copy) |
 | `hypr` | My Hyprland overrides in `~/.config/hypr/`: `hyprland.lua`, `bindings.lua`, `autostart.lua`, `workspaces.lua`, `monitors.lua`, `input.lua`. Files still at the Omarchy default (`looknfeel.lua`, `hyprsunset.conf`, `xdph.conf`, `.luarc.json`) stay untracked so package updates keep improving them. |
-| `wsl` | WSL2-only (not on Omarchy): `~/.zshrc`, `~/.zsh_plugins.txt` (antidote); SSH agent relayed from Windows via `npiperelay` + `socat` |
+| `wsl` | WSL2-only (not on Omarchy): `~/.zshrc`, `~/.zsh_plugins.txt` (antidote), `~/.gitconfig.wsl` (included by `~/.gitconfig`: plain `less` pager, `gh` credential helper); SSH agent relayed from Windows via `npiperelay` + `socat` |
 
 On WSL2, stow the shell package instead of the desktop ones:
 
