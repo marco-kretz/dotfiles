@@ -92,14 +92,6 @@ fi
 export FZF_CTRL_T_OPTS=$'--walker-skip .git,node_modules,target\n--preview '\'$_fzf_prev$'\'\n--bind \'ctrl-/:change-preview-window(down|hidden|)\''
 unset _fzf_prev
 
-# nvm (Arch package ships /usr/share/nvm/init-nvm.sh)
-[[ -r /usr/share/nvm/init-nvm.sh ]] && source /usr/share/nvm/init-nvm.sh
-
-# Enable gnome-keyring SSH agent
-# if [ -z "$SSH_AUTH_SOCK" ]; then
-#   export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/keyring/ssh"
-# fi
-
 export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock
 if ! socat -u OPEN:/dev/null UNIX-CLIENT:$SSH_AUTH_SOCK >/dev/null 2>&1; then
   rm -f $SSH_AUTH_SOCK
