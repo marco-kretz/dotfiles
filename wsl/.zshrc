@@ -95,9 +95,6 @@ unset _fzf_prev
 # nvm (Arch package ships /usr/share/nvm/init-nvm.sh)
 [[ -r /usr/share/nvm/init-nvm.sh ]] && source /usr/share/nvm/init-nvm.sh
 
-# Force portable TERM over SSH — Ghostty's ssh-env misses tmux/nested sessions
-ssh() { TERM=xterm-256color command ssh "$@" }
-
 # Enable gnome-keyring SSH agent
 # if [ -z "$SSH_AUTH_SOCK" ]; then
 #   export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/keyring/ssh"
