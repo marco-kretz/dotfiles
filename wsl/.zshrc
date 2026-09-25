@@ -18,11 +18,11 @@ HISTSIZE=10000
 SAVEHIST=10000
 
 # PATH (early so plugin hooks resolve commands)
-export PATH="$HOME/.symfony5/bin:$HOME/.local/bin:$HOME/.config/composer/vendor/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.config/composer/vendor/bin:$PATH"
 
 # Antidote plugin manager (only active when installed)
 # NOTE: fast-syntax-highlighting was removed — it corrupted terminal state on
-# WSL/Ghostty (stuck-Alt → Explorer Properties on dbl-click, broken input).
+# WSL (stuck-Alt → Explorer Properties on dbl-click, broken input).
 if [[ -d ~/.antidote ]]; then
   zsh_plugins=${ZDOTDIR:-$HOME}/.zsh_plugins
   if [[ ! ${zsh_plugins}.zsh -nt ${zsh_plugins}.txt ]]; then
@@ -69,7 +69,7 @@ alias rm='rm -I'
 # Prompt
 eval "$(starship init zsh)"
 
-# Terminal: do not override a sensible TERM from the emulator (e.g. xterm-kitty)
+# Terminal: do not override a sensible TERM from the emulator
 if [[ -z $TERM || $TERM == dumb ]]; then
   export TERM=xterm-256color
 fi
@@ -77,15 +77,15 @@ fi
 # FZF
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 
-if [[ -f /usr/share/fzf/shell/completion.zsh ]]; then
-  source /usr/share/fzf/shell/completion.zsh
-fi
-if [[ -f /usr/share/fzf/shell/key-bindings.zsh ]]; then
-  source /usr/share/fzf/shell/key-bindings.zsh
+[[ -f /usr/share/doc/fzf/examples/completion.zsh ]] && source /usr/share/doc/fzf/examples/completion.zsh
+if [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
+  source /usr/share/doc/fzf/examples/key-bindings.zsh
+  # keep Ctrl-R on zsh-fzf-history-search instead of fzf's widget
+  (( $+widgets[fzf_history_search] )) && bindkey '^R' fzf_history_search
 fi
 
-if command -v bat >/dev/null 2>&1; then
-  _fzf_prev='bat -n --color=always {}'
+if command -v batcat >/dev/null 2>&1; then
+  _fzf_prev='batcat -n --color=always {}'
 else
   _fzf_prev='cat {}'
 fi
@@ -103,4 +103,4 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # opencode
-export PATH=/home/marco/.opencode/bin:$PATH
+export PATH="$HOME/.opencode/bin:$PATH"
