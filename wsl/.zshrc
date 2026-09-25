@@ -20,10 +20,6 @@ SAVEHIST=10000
 # PATH (early so plugin hooks resolve commands)
 export PATH="$HOME/.symfony5/bin:$HOME/.local/bin:$HOME/.config/composer/vendor/bin:$PATH"
 
-# Omarchy shell base — portable guard so this .zshrc works on non-Omarchy machines too
-[[ -f /usr/share/omarchy-zsh/shell/zoptions ]] && source /usr/share/omarchy-zsh/shell/zoptions
-[[ -f /usr/share/omarchy-zsh/shell/all ]] && source /usr/share/omarchy-zsh/shell/all
-
 # Antidote plugin manager (only active when installed)
 # NOTE: fast-syntax-highlighting was removed — it corrupted terminal state on
 # WSL/Ghostty (stuck-Alt → Explorer Properties on dbl-click, broken input).
@@ -70,7 +66,7 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -I'
 
-# Prompt — skip if Omarchy already initialized starship via its inits
+# Prompt
 eval "$(starship init zsh)"
 
 # Terminal: do not override a sensible TERM from the emulator (e.g. xterm-kitty)
