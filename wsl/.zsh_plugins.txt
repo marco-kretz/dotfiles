@@ -1,0 +1,2 @@
+zsh-users/zsh-autosuggestions
+joshskidmore/zsh-fzf-history-search
