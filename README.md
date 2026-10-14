@@ -15,7 +15,7 @@ sudo pacman -S stow starship
 ## Stow packages
 
 ```bash
-stow -t ~ bin git starship agents claude-code codex pi opencode pipewire voxtype openrgb ddev hypr playwright
+stow -t ~ bin git starship agents claude-code codex pi opencode pipewire voxtype openrgb ddev hypr playwright pywalfox vesktop
 ```
 
 | Package | What it links |
@@ -34,6 +34,8 @@ stow -t ~ bin git starship agents claude-code codex pi opencode pipewire voxtype
 | `openrgb` | `sizes.ors`, `zWhite` / `zOff` profiles, Omarchy `theme-set` hook that syncs the LEDs to the theme accent, oneshot that applies it on graphical login, sleep hook (not stowed, see below) |
 | `ddev` | `~/.ddev/commands/host/worktree` (`ddev worktree <branch>`: new git worktree as its own DDEV project, incl. DB copy) |
 | `hypr` | My Hyprland overrides in `~/.config/hypr/`: `hyprland.lua`, `bindings.lua`, `autostart.lua`, `workspaces.lua`, `monitors.lua`, `input.lua`. Files still at the Omarchy default (`looknfeel.lua`, `hyprsunset.conf`, `xdph.conf`, `.luarc.json`) stay untracked so package updates keep improving them. |
+| `pywalfox` | Omarchy `theme-set` hook that writes the theme's terminal palette to `~/.cache/wal/colors.json` and runs `pywalfox update`, so Firefox follows the theme (setup below) |
+| `vesktop` | Omarchy `theme-set` hook that writes `~/.config/vesktop/themes/omarchy.theme.css` from the theme's `colors.toml` (enable once under Vesktop settings → Themes) |
 | `wsl` | WSL2-only (not on Omarchy): `~/.zshrc`, `~/.zsh_plugins.txt` (antidote), `~/.gitconfig.wsl` (included by `~/.gitconfig`: plain `less` pager, `gh` credential helper); SSH agent relayed from Windows via `npiperelay` + `socat` |
 
 On WSL2, stow the shell package instead of the desktop ones:
@@ -65,6 +67,18 @@ sudo usermod -aG i2c "$USER"   # takes effect after the next login
 The LED color follows the active Omarchy theme's `accent` from its `colors.toml`. To use a different
 color for the LEDs than for the UI, drop a hex value into
 `~/.config/omarchy/themes/<slug>/openrgb-accent` — it wins over `accent`.
+
+After stowing `pywalfox` (Pywalfox extension installed in Firefox):
+
+```bash
+uv tool install pywalfox
+pywalfox install
+# Firefox with an XDG profile (~/.config/mozilla) does not read ~/.mozilla, so install the manifest system-wide.
+sudo install -Dm644 ~/.mozilla/native-messaging-hosts/pywalfox.json /usr/lib/mozilla/native-messaging-hosts/pywalfox.json
+rm -r ~/.mozilla   # only if pywalfox install created it
+```
+
+Restart Firefox, then click "Fetch Pywal colors" in the extension once.
 
 ### Agent skills
 
