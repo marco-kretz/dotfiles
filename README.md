@@ -35,6 +35,7 @@ stow -t ~ bin git starship agents claude-code codex pi opencode pipewire voxtype
 | `ddev` | `~/.ddev/commands/host/worktree` (`ddev worktree <branch>`: new git worktree as its own DDEV project, incl. DB copy) |
 | `hypr` | My Hyprland overrides in `~/.config/hypr/`: `hyprland.lua`, `bindings.lua`, `autostart.lua`, `workspaces.lua`, `monitors.lua`, `input.lua`. Files still at the Omarchy default (`looknfeel.lua`, `hyprsunset.conf`, `xdph.conf`, `.luarc.json`) stay untracked so package updates keep improving them. |
 | `pywalfox` | Omarchy `theme-set` hook that writes the theme's terminal palette to `~/.cache/wal/colors.json` and runs `pywalfox update`, so Firefox follows the theme (setup below) |
+| `firefox` | `user.js` for the Firefox Developer Edition profile: my UI prefs plus a curated subset of [Betterfox](https://github.com/yokoffing/Betterfox) (speed, hardening, no telemetry/AI, NVIDIA VA-API). Not stowed, the profile dir name is random (setup below) |
 | `vesktop` | Omarchy `theme-set` hook that writes `~/.config/vesktop/themes/omarchy.theme.css` from the theme's `colors.toml` (enable once under Vesktop settings → Themes) |
 | `wsl` | WSL2-only (not on Omarchy): `~/.zshrc`, `~/.zsh_plugins.txt` (antidote), `~/.gitconfig.wsl` (included by `~/.gitconfig`: plain `less` pager, `gh` credential helper); SSH agent relayed from Windows via `npiperelay` + `socat` |
 
@@ -79,6 +80,14 @@ rm -r ~/.mozilla   # only if pywalfox install created it
 ```
 
 Restart Firefox, then click "Fetch Pywal colors" in the extension once.
+
+After cloning, link `firefox/user.js` into the profile (Firefox applies it on the next start):
+
+```bash
+ln -sf ~/GitHub/dotfiles/firefox/user.js ~/.config/mozilla/firefox/*.dev-edition-default/user.js
+```
+
+Removing a pref from `user.js` does not revert it; reset it in `about:config` as well.
 
 ### Agent skills
 
