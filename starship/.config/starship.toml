@@ -1,32 +1,78 @@
+# Akari: lantern-lit, warm, quiet. ANSI color names only, so it follows theme switches.
+# bright-black = muted sand, yellow = lantern gold, red = coral, cyan = soft teal.
 add_newline = true
 command_timeout = 200
-format = "[$directory$git_branch$git_status]($style)$character"
+format = """
+[╭─](bright-black)$directory$git_branch$git_state$git_status$fill$php$nodejs$python$rust$golang$cmd_duration
+[╰─](bright-black)[灯](bold red) $character"""
+
+[fill]
+symbol = " "
 
 [character]
-error_symbol = "[✗](bold cyan)"
-success_symbol = "[❯](bold cyan)"
+success_symbol = "[❯](bright-black)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold cyan)"
 
 [directory]
-truncation_length = 2
+style = "bold yellow"
+truncation_length = 3
 truncation_symbol = "…/"
-repo_root_style = "bold cyan"
-repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
+read_only = " 󰌾"
+read_only_style = "red"
+repo_root_style = "bold yellow"
+repo_root_format = " [ ](yellow)[$repo_root]($repo_root_style)[$path](yellow)[$read_only]($read_only_style) "
+format = " [ ](yellow)[$path]($style)[$read_only]($read_only_style) "
 
 [git_branch]
-format = "[$branch]($style) "
-style = "italic cyan"
+symbol = " "
+style = "cyan"
+format = "[·](bright-black) [$symbol$branch]($style) "
+
+[git_state]
+style = "bold red"
+format = "[$state( $progress_current/$progress_total)]($style) "
 
 [git_status]
-format     = '[$all_status]($style)'
-style      = "cyan"
-ahead      = "⇡${count} "
-diverged   = "⇕⇡${ahead_count}⇣${behind_count} "
-behind     = "⇣${count} "
-conflicted = " "
-up_to_date = " "
-untracked  = "? "
-modified   = " "
-stashed    = ""
-staged     = ""
-renamed    = ""
-deleted    = ""
+style = "red"
+format = "([$all_status$ahead_behind]($style) )"
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+conflicted = "=${count} "
+untracked = "?${count} "
+modified = "!${count} "
+staged = "[+${count} ](green)"
+renamed = "»${count} "
+deleted = "✘${count} "
+stashed = "[≡ ](bright-black)"
+
+[cmd_duration]
+min_time = 2000
+style = "bright-black"
+format = "[  $duration]($style)"
+
+[php]
+symbol = " "
+style = "bright-black"
+format = "[ $symbol$version]($style)"
+
+[nodejs]
+symbol = " "
+style = "bright-black"
+format = "[ $symbol$version]($style)"
+
+[python]
+symbol = " "
+style = "bright-black"
+format = "[ $symbol$version( \\($virtualenv\\))]($style)"
+
+[rust]
+symbol = " "
+style = "bright-black"
+format = "[ $symbol$version]($style)"
+
+[golang]
+symbol = " "
+style = "bright-black"
+format = "[ $symbol$version]($style)"
