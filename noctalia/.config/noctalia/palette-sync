@@ -1,0 +1,136 @@
+#!/usr/bin/env python3
+"""Noctalia colors_changed hook: push the active custom palette to Firefox
+(Pywalfox), Vesktop, Brave and OpenRGB. Ports the Omarchy theme-set hooks.
+
+Run with --check for a self-test."""
+
+import glob
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import tomllib
+
+HOME = os.path.expanduser("~")
+CONFIG = os.path.join(HOME, ".config/noctalia")
+NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
+
+
+def active_palette(config_dir):
+    # ponytail: custom palettes only; wallpaper-generated colors have no file to read.
+    for path in sorted(glob.glob(os.path.join(config_dir, "*.toml"))):
+        theme = tomllib.load(open(path, "rb")).get("theme", {})
+        if theme.get("source") == "custom" and theme.get("custom_palette"):
+            palette = json.load(open(os.path.join(config_dir, "palettes", theme["custom_palette"] + ".json")))
+            return palette["dark"] if theme.get("mode") != "light" else palette.get("light", palette["dark"])
+    return None
+
+
+def pywal(p):
+    t = p["terminal"]
+    colors = [t["normal"][n] for n in NAMES] + [t["bright"][n] for n in NAMES]
+    # pywal convention: color0 is the background, color15 the foreground.
+    colors[0], colors[15] = t["background"], t["foreground"]
+    return {
+        "wallpaper": "",
+        "special": {"background": colors[0], "foreground": colors[15], "cursor": t["cursor"]},
+        "colors": {f"color{i}": v for i, v in enumerate(colors)},
+    }
+
+
+def vesktop(p):
+    rows = {
+        "background-base-lowest": p["shadow"],
+        "background-base-lower": p["shadow"],
+        "background-base-low": p["surface"],
+        "background-surface-high": p["surface_container"],
+        "background-surface-higher": p["surface_container"],
+        "background-surface-highest": p["outline_variant"],
+        "chat-background-default": p["surface"],
+        "text-default": p["on_surface"],
+        "text-strong": p["on_hover"],
+        "text-muted": p["on_surface_variant"],
+        "text-link": p["terminal"]["normal"]["blue"],
+        "interactive-normal": p["on_surface"],
+        "interactive-hover": p["on_hover"],
+        "interactive-active": p["on_hover"],
+        "interactive-muted": p["on_surface_variant"],
+        "brand-500": p["primary"],
+    }
+    body = "\n".join(f"  --{k}: {v} !important;" for k, v in rows.items())
+    return ("/**\n * @name Omarchy\n * @description Generated from the Noctalia palette by"
+            " ~/.config/noctalia/palette-sync\n */\n"
+            f":root, .theme-dark, .theme-darker, .theme-midnight, .theme-light {{\n{body}\n}}\n")
+
+
+def brave(p):
+    # Unpacked Chromium theme: the BrowserThemeColor policy only seeds a lighter Material palette.
+    rgb = lambda h: [int(h.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)]
+    bg, fg, light, dark = rgb(p["surface"]), rgb(p["on_surface"]), rgb(p["surface_container"]), rgb(p["shadow"])
+    return {
+        "manifest_version": 3,
+        "name": "Omarchy",
+        "version": "1.0",
+        "theme": {"colors": {
+            "frame": bg, "frame_inactive": bg,
+            "toolbar": bg, "toolbar_text": fg, "toolbar_button_icon": fg,
+            "background_tab": light, "background_tab_inactive": light,
+            "tab_text": fg, "tab_background_text": fg, "tab_background_text_inactive": fg,
+            "bookmark_text": fg,
+            "omnibox_background": light, "omnibox_text": fg,
+            "ntp_background": dark, "ntp_text": fg,
+        }},
+    }
+
+
+def openrgb_accent(p, config_dir):
+    # A hand-picked hex in ~/.config/noctalia/openrgb-accent wins, for LEDs that need a clearer color than the UI accent.
+    override = os.path.join(config_dir, "openrgb-accent")
+    if os.path.exists(override):
+        return open(override).read().strip().lstrip("#")[:6]
+    return p["primary"].lstrip("#")
+
+
+def write(path, content):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        f.write(content if isinstance(content, str) else json.dumps(content, indent=2))
+
+
+def main():
+    p = active_palette(CONFIG)
+    if p is None:
+        return
+    if shutil.which("pywalfox"):
+        write(os.path.join(HOME, ".cache/wal/colors.json"), pywal(p))
+        subprocess.run(["pywalfox", "update"], capture_output=True)
+    if os.path.isdir(os.path.join(HOME, ".config/vesktop/themes")):
+        write(os.path.join(HOME, ".config/vesktop/themes/omarchy.theme.css"), vesktop(p))
+    write(os.path.join(HOME, ".local/share/omarchy-brave-theme/manifest.json"), brave(p))
+    if shutil.which("openrgb"):
+        subprocess.run(["openrgb", "-m", "direct", "-c", openrgb_accent(p, CONFIG)], capture_output=True)
+
+
+def check():
+    with tempfile.TemporaryDirectory() as d:
+        palette = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../../..",
+                               "omarchy-theme-akari/noctalia/Akari.json")
+        os.makedirs(os.path.join(d, "palettes"))
+        shutil.copy(palette, os.path.join(d, "palettes/Akari.json"))
+        assert active_palette(d) is None
+        write(os.path.join(d, "theme.toml"), '[theme]\nsource = "custom"\ncustom_palette = "Akari"\n')
+        p = active_palette(d)
+        wal = pywal(p)["colors"]
+        assert (wal["color0"], wal["color1"], wal["color15"]) == ("#1c1b19", "#ff9585", "#e8dcc8")
+        assert "--brand-500: #ff6b75 !important;" in vesktop(p)
+        assert brave(p)["theme"]["colors"]["frame"] == [0x1c, 0x1b, 0x19]
+        assert openrgb_accent(p, d) == "ff6b75"
+        write(os.path.join(d, "openrgb-accent"), "#ff2233\n")
+        assert openrgb_accent(p, d) == "ff2233"
+    print("PASS")
+
+
+if __name__ == "__main__":
+    check() if "--check" in sys.argv else main()

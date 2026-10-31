@@ -42,6 +42,7 @@ stow --no-folding -t ~ bin git zsh starship ghostty mise agents claude-code code
 | `pywalfox` | Omarchy `theme-set` hook that writes the theme's terminal palette to `~/.cache/wal/colors.json` and runs `pywalfox update`, so Firefox follows the theme (setup below) |
 | `firefox` | `user.js` for the Firefox Developer Edition profile: my UI prefs plus a curated subset of [Betterfox](https://github.com/yokoffing/Betterfox) (speed, hardening, no telemetry/AI, NVIDIA VA-API). Not stowed, the profile dir name is random (setup below) |
 | `vesktop` | Omarchy `theme-set` hook that writes `~/.config/vesktop/themes/omarchy.theme.css` from the theme's `colors.toml` (enable once under Vesktop settings → Themes) |
+| `noctalia` | Not for Omarchy. `colors_changed` hook (`~/.config/noctalia/{hooks.toml,palette-sync}`) that ports the `pywalfox`, `vesktop`, `openrgb` and Brave theme hooks to the active custom Noctalia palette; `openrgb-accent` overrides the LED color. Self-test: `~/.config/noctalia/palette-sync --check` |
 | `wsl` | WSL2-only (not on Omarchy): `~/.zshrc`, `~/.zsh_plugins.txt` (antidote), `~/.gitconfig.wsl` (included by `~/.gitconfig`: plain `less` pager, `gh` credential helper); SSH agent relayed from Windows via `npiperelay` + `socat` |
 
 On WSL2, stow the shell package instead of the desktop ones:

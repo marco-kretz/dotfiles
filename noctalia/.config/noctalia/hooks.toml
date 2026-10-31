@@ -1,0 +1,2 @@
+[hooks]
+colors_changed = "~/.config/noctalia/palette-sync"
