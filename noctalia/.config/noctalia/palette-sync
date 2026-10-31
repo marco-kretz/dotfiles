@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Noctalia colors_changed hook: push the active custom palette to Firefox
-(Pywalfox), Vesktop, Brave and OpenRGB. Ports the Omarchy theme-set hooks.
+(Pywalfox), Vesktop, Brave and OpenRGB.
 
 Run with --check for a self-test."""
 
@@ -62,7 +62,7 @@ def vesktop(p):
         "brand-500": p["mPrimary"],
     }
     body = "\n".join(f"  --{k}: {v} !important;" for k, v in rows.items())
-    return ("/**\n * @name Omarchy\n * @description Generated from the Noctalia palette by"
+    return ("/**\n * @name Noctalia\n * @description Generated from the Noctalia palette by"
             " ~/.config/noctalia/palette-sync\n */\n"
             f":root, .theme-dark, .theme-darker, .theme-midnight, .theme-light {{\n{body}\n}}\n")
 
@@ -73,7 +73,7 @@ def brave(p):
     bg, fg, light, dark = rgb(p["mSurface"]), rgb(p["mOnSurface"]), rgb(p["mSurfaceVariant"]), rgb(p["mShadow"])
     return {
         "manifest_version": 3,
-        "name": "Omarchy",
+        "name": "Noctalia",
         "version": "1.0",
         "theme": {"colors": {
             "frame": bg, "frame_inactive": bg,
@@ -109,8 +109,8 @@ def main():
         write(os.path.join(HOME, ".cache/wal/colors.json"), pywal(p))
         subprocess.run(["pywalfox", "update"], capture_output=True)
     if os.path.isdir(os.path.join(HOME, ".config/vesktop/themes")):
-        write(os.path.join(HOME, ".config/vesktop/themes/omarchy.theme.css"), vesktop(p))
-    write(os.path.join(HOME, ".local/share/omarchy-brave-theme/manifest.json"), brave(p))
+        write(os.path.join(HOME, ".config/vesktop/themes/noctalia.theme.css"), vesktop(p))
+    write(os.path.join(HOME, ".local/share/noctalia-brave-theme/manifest.json"), brave(p))
     if shutil.which("openrgb"):
         subprocess.run(["openrgb", "-m", "direct", "-c", openrgb_accent(p, CONFIG)], capture_output=True)
 
