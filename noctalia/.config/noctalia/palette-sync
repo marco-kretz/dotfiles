@@ -4,7 +4,6 @@
 
 Run with --check for a self-test."""
 
-import glob
 import json
 import os
 import shutil
@@ -15,17 +14,20 @@ import tomllib
 
 HOME = os.path.expanduser("~")
 CONFIG = os.path.join(HOME, ".config/noctalia")
+# Noctalia 5 persists GUI/IPC choices like the color scheme here, not in ~/.config.
+SETTINGS = os.path.join(HOME, ".local/state/noctalia/settings.toml")
 NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
 
 
-def active_palette(config_dir):
-    # ponytail: custom palettes only; wallpaper-generated colors have no file to read.
-    for path in sorted(glob.glob(os.path.join(config_dir, "*.toml"))):
-        theme = tomllib.load(open(path, "rb")).get("theme", {})
-        if theme.get("source") == "custom" and theme.get("custom_palette"):
-            palette = json.load(open(os.path.join(config_dir, "palettes", theme["custom_palette"] + ".json")))
-            return palette["dark"] if theme.get("mode") != "light" else palette.get("light", palette["dark"])
-    return None
+def active_palette(settings, config_dir):
+    # shortcut: custom palettes only; wallpaper-generated colors have no file to read.
+    if not os.path.exists(settings):
+        return None
+    theme = tomllib.load(open(settings, "rb")).get("theme", {})
+    if theme.get("source") != "custom" or not theme.get("custom_palette"):
+        return None
+    palette = json.load(open(os.path.join(config_dir, "palettes", theme["custom_palette"] + ".json")))
+    return palette["dark"] if theme.get("mode") != "light" else palette.get("light", palette["dark"])
 
 
 def pywal(p):
@@ -42,22 +44,22 @@ def pywal(p):
 
 def vesktop(p):
     rows = {
-        "background-base-lowest": p["shadow"],
-        "background-base-lower": p["shadow"],
-        "background-base-low": p["surface"],
-        "background-surface-high": p["surface_container"],
-        "background-surface-higher": p["surface_container"],
-        "background-surface-highest": p["outline_variant"],
-        "chat-background-default": p["surface"],
-        "text-default": p["on_surface"],
-        "text-strong": p["on_hover"],
-        "text-muted": p["on_surface_variant"],
+        "background-base-lowest": p["mShadow"],
+        "background-base-lower": p["mShadow"],
+        "background-base-low": p["mSurface"],
+        "background-surface-high": p["mSurfaceVariant"],
+        "background-surface-higher": p["mSurfaceVariant"],
+        "background-surface-highest": p["mOutline"],
+        "chat-background-default": p["mSurface"],
+        "text-default": p["mOnSurface"],
+        "text-strong": p["mOnHover"],
+        "text-muted": p["mOnSurfaceVariant"],
         "text-link": p["terminal"]["normal"]["blue"],
-        "interactive-normal": p["on_surface"],
-        "interactive-hover": p["on_hover"],
-        "interactive-active": p["on_hover"],
-        "interactive-muted": p["on_surface_variant"],
-        "brand-500": p["primary"],
+        "interactive-normal": p["mOnSurface"],
+        "interactive-hover": p["mOnHover"],
+        "interactive-active": p["mOnHover"],
+        "interactive-muted": p["mOnSurfaceVariant"],
+        "brand-500": p["mPrimary"],
     }
     body = "\n".join(f"  --{k}: {v} !important;" for k, v in rows.items())
     return ("/**\n * @name Omarchy\n * @description Generated from the Noctalia palette by"
@@ -68,7 +70,7 @@ def vesktop(p):
 def brave(p):
     # Unpacked Chromium theme: the BrowserThemeColor policy only seeds a lighter Material palette.
     rgb = lambda h: [int(h.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)]
-    bg, fg, light, dark = rgb(p["surface"]), rgb(p["on_surface"]), rgb(p["surface_container"]), rgb(p["shadow"])
+    bg, fg, light, dark = rgb(p["mSurface"]), rgb(p["mOnSurface"]), rgb(p["mSurfaceVariant"]), rgb(p["mShadow"])
     return {
         "manifest_version": 3,
         "name": "Omarchy",
@@ -90,7 +92,7 @@ def openrgb_accent(p, config_dir):
     override = os.path.join(config_dir, "openrgb-accent")
     if os.path.exists(override):
         return open(override).read().strip().lstrip("#")[:6]
-    return p["primary"].lstrip("#")
+    return p["mPrimary"].lstrip("#")
 
 
 def write(path, content):
@@ -100,7 +102,7 @@ def write(path, content):
 
 
 def main():
-    p = active_palette(CONFIG)
+    p = active_palette(SETTINGS, CONFIG)
     if p is None:
         return
     if shutil.which("pywalfox"):
@@ -119,9 +121,12 @@ def check():
                                "omarchy-theme-akari/noctalia/Akari.json")
         os.makedirs(os.path.join(d, "palettes"))
         shutil.copy(palette, os.path.join(d, "palettes/Akari.json"))
-        assert active_palette(d) is None
-        write(os.path.join(d, "theme.toml"), '[theme]\nsource = "custom"\ncustom_palette = "Akari"\n')
-        p = active_palette(d)
+        settings = os.path.join(d, "settings.toml")
+        assert active_palette(settings, d) is None
+        write(settings, '[theme]\nsource = "community"\ncustom_palette = "Akari"\n')
+        assert active_palette(settings, d) is None
+        write(settings, '[theme]\nsource = "custom"\ncustom_palette = "Akari"\n')
+        p = active_palette(settings, d)
         wal = pywal(p)["colors"]
         assert (wal["color0"], wal["color1"], wal["color15"]) == ("#1c1b19", "#ff9585", "#e8dcc8")
         assert "--brand-500: #ff6b75 !important;" in vesktop(p)
