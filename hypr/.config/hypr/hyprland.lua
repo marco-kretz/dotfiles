@@ -57,3 +57,30 @@ o.window({ class = "^md\\.obsidian\\.Obsidian$" }, { workspace = "special:obsidi
 
 -- Spotify always lives in the "spotify" special workspace (SUPER+M).
 o.window({ class = "^spotify$" }, { workspace = "special:spotify silent" })
+
+-- Brave Origin: fully opaque (its class isn't in Omarchy's browser match).
+o.window({ class = "^brave-origin$" }, { tag = "-default-opacity", opacity = "1 1" })
+
+-- Much less transparency than Omarchy's defaults (0.985/0.96, browsers 1/0.985).
+o.window({ tag = "default-opacity" }, { opacity = "1 0.99" })
+o.window({ tag = "chromium-based-browser" }, { opacity = "1 0.995" })
+o.window({ tag = "firefox-based-browser" }, { opacity = "1 0.995" })
+
+o.window("GeForceNOW", { immediate = true })
+
+-- Bitwarden extension popout in Firefox (master password unlock): float it.
+-- Firefox opens it titled "Mozilla Firefox" and renames it afterwards, and
+-- static rules like float only see the initial title, so react to the rename.
+o.window({ class = "^firefox", title = "\\(Bitwarden.*\\) - Bitwarden" }, { no_screen_share = true })
+hl.on("window.title", function(w)
+  if w == nil or w.floating or not w.class:find("^firefox") or not w.title:find("%(Bitwarden.*%) %- Bitwarden") then
+    return
+  end
+  hl.dispatch(hl.dsp.window.float({ action = "set", window = w }))
+  hl.dispatch(hl.dsp.window.resize({ x = 875, y = 600, window = w }))
+  hl.dispatch(hl.dsp.window.center({ window = w }))
+end)
+
+-- Bitwarden extension popout in Brave: its app-window class carries the extension ID, so a static rule suffices.
+o.window({ class = "^brave-nngceckbapebfimnlniiiahkandclblb-.*" }, { float = true, center = true, no_screen_share = true })
+
