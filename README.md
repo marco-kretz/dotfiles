@@ -9,20 +9,24 @@ These are the dotfiles I use on my Linux machines. Feel free to use, share or wh
 ## Deps
 
 ```bash
-sudo pacman -S stow starship
+sudo pacman -S stow starship omarchy-zsh zsh-autosuggestions
+chsh -s /usr/bin/zsh
 ```
 
 ## Stow packages
 
 ```bash
-stow -t ~ bin git starship agents claude-code codex pi opencode pipewire voxtype openrgb ddev hypr playwright pywalfox vesktop
+stow --no-folding -t ~ bin git zsh starship ghostty mise agents claude-code codex pi opencode pipewire voxtype openrgb ddev hypr brave playwright pywalfox vesktop
 ```
 
 | Package | What it links |
 |---|---|
 | `bin` | `~/.local/bin/z-vault-sort` (sorts the Obsidian inbox into notes via TypeSafe Jev; dry run by default, `--apply` moves) |
 | `git` | `~/.gitconfig` |
+| `zsh` | `~/.zshrc` on top of the `omarchy-zsh` package (do not run `omarchy-setup-zsh`, it copies over the symlink) |
 | `starship` | `~/.config/starship.toml` |
+| `ghostty` | `~/.config/ghostty/config` (Omarchy default with my font and size) |
+| `mise` | `~/.config/mise/config.toml` (global tools: node, bun, gh, just, coding agent CLIs) |
 | `agents` | `~/.agents/skills/*` (skills shared by all coding agents) |
 | `claude-code` | `~/.claude/CLAUDE.md`, native `agents/`, statusline script, `settings.json.example` |
 | `pi` | `~/.pi/agent/AGENTS.md`, local extension, `settings.json.example`; bootstrapped `settings.json` is git-ignored |
@@ -33,7 +37,8 @@ stow -t ~ bin git starship agents claude-code codex pi opencode pipewire voxtype
 | `voxtype` | `~/.config/voxtype/config.toml` |
 | `openrgb` | `sizes.ors`, `zWhite` / `zOff` profiles, Omarchy `theme-set` hook that syncs the LEDs to the theme accent, oneshot that applies it on graphical login, sleep hook (not stowed, see below) |
 | `ddev` | `~/.ddev/commands/host/worktree` (`ddev worktree <branch>`: new git worktree as its own DDEV project, incl. DB copy) |
-| `hypr` | My Hyprland overrides in `~/.config/hypr/`: `hyprland.lua`, `bindings.lua`, `autostart.lua`, `workspaces.lua`, `monitors.lua`, `input.lua`. Files still at the Omarchy default (`looknfeel.lua`, `hyprsunset.conf`, `xdph.conf`, `.luarc.json`) stay untracked so package updates keep improving them. |
+| `hypr` | My Hyprland overrides in `~/.config/hypr/`: `hyprland.lua`, `bindings.lua`, `autostart.lua`, `workspaces.lua`, `monitors.lua`, `input.lua`, `looknfeel.lua`. Files still at the Omarchy default (`hyprsunset.conf`, `xdph.conf`, `.luarc.json`) stay untracked so package updates keep improving them. |
+| `brave` | `~/.config/brave-origin-flags.conf` (Omarchy defaults plus `--disable-features=WaylandWpColorManagerV1`, so Hyprland maps Brave to the monitor's SDR brightness instead of a dim 80 nits in HDR mode) |
 | `pywalfox` | Omarchy `theme-set` hook that writes the theme's terminal palette to `~/.cache/wal/colors.json` and runs `pywalfox update`, so Firefox follows the theme (setup below) |
 | `firefox` | `user.js` for the Firefox Developer Edition profile: my UI prefs plus a curated subset of [Betterfox](https://github.com/yokoffing/Betterfox) (speed, hardening, no telemetry/AI, NVIDIA VA-API). Not stowed, the profile dir name is random (setup below) |
 | `vesktop` | Omarchy `theme-set` hook that writes `~/.config/vesktop/themes/omarchy.theme.css` from the theme's `colors.toml` (enable once under Vesktop settings → Themes) |
