@@ -66,5 +66,3 @@ Propose the approach taken to tackle the problem outlined above. Explain the
 - Keep the total description scannable.
 - If the PR is a work in progress, mark it as draft and add a **WIP**
   notice at the top.
-- Always write the title and description in English, regardless of the
-  language of the conversation.

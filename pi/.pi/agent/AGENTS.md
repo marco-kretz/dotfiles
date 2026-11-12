@@ -9,6 +9,7 @@
 - Never claim verification you did not perform. Warn before risky, destructive, or remote operations.
 - After two failed attempts, stop repeating the approach and consult documentation or choose a simpler alternative.
 - Do not commit, push, publish, or deploy without explicit authorization. Use Conventional Commits when commits are requested.
+- Write everything that lands in a repository or remote service (code, comments, docs, commit messages, PR and issue text) in English, regardless of the conversation language, unless the project or the artifact being extended uses another language. Chat replies follow the user's language.
 
 ## Code and validation
 

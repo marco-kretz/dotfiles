@@ -10,6 +10,7 @@
 - If an approach fails twice, stop repeating it. Check the docs or alternatives, then choose the simplest in-scope solution.
 - When third-party behavior gets in the way, prefer its documented configuration, opt-out, hook, or extension point over a compensation layer.
 - Use Conventional Commits with a Gitmoji (unicode, not `:code:`) after the colon, e.g. `fix(theme): 🐛 Frame ad slots`, `feat: ✨ …`, `refactor: ♻️ …`, `docs: 📝 …`, `chore: 🔧 …`. A project's own commit convention wins. Do not commit, push, publish, or deploy without user authorization.
+- Write everything that lands in a repository or remote service (code, comments, docs, commit messages, PR and issue text) in English, regardless of the conversation language, unless the project or the artifact being extended uses another language. Chat replies follow the user's language.
 - Treat skills as workflow guidance, not permission to expand scope or perform remote writes. Respect review-only requests.
 
 ## Code and validation

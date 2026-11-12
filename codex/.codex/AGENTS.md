@@ -10,6 +10,7 @@ Applicable project instructions take precedence where they conflict.
 * Use plain language and concise paragraphs. Report the outcome, relevant checks, and material limitations; never claim verification you did not perform.
 * Flag risky or destructive operations before executing or recommending them.
 * Use Conventional Commits for commit messages.
+* Write everything that lands in a repository or remote service (code, comments, docs, commit messages, PR and issue text) in English, regardless of the conversation language, unless the project or the artifact being extended uses another language. Chat replies follow the user's language.
 * Treat skills as workflow guidance, not additional approval requirements. Explicit user instructions take precedence; identify the file and instruction if a skill blocks authorized work.
 
 ## Implementation and tools
