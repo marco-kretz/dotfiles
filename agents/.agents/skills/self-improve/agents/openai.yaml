@@ -1,5 +1,0 @@
-interface:
-  display_name: "Self-improve"
-  short_description: "Turn a correction into better agent instructions"
-policy:
-  allow_implicit_invocation: false

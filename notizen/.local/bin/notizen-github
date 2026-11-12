@@ -1,0 +1,20 @@
+#!/bin/sh
+# Writes open GitHub issues/PRs involving me into the vault (links only; status stays in GitHub).
+set -eu
+gh=$HOME/.local/share/mise/shims/gh
+out="$HOME/Dokumente/Notizen/30 Bereiche/codebites/GitHub.md"
+trap 'rm -f "$out.tmp.$$"' EXIT  # no leftover temp file in the vault when gh fails
+fields=repository,number,title,url
+fmt='.[] | "- [\(.repository.nameWithOwner)#\(.number)](\(.url)) \(.title | gsub("[\\[\\]]"; ""))"'
+section() { # title, gh search args...
+  t=$1; shift
+  printf '\n## %s\n' "$t"
+  "$gh" search "$@" --state=open --limit 50 --json "$fields" --jq "$fmt"
+}
+{
+  printf -- '---\ntyp: übersicht\ntags:\n  - github\n---\n\n# GitHub\n\nAutomatisch erzeugt am %s, nicht von Hand bearbeiten.\n' "$(date +%F)"
+  section 'Mir zugewiesene Issues' issues --assignee=@me
+  section 'Review angefragt' prs --review-requested=@me
+  section 'Meine offenen PRs' prs --author=@me
+} > "$out.tmp.$$"
+mv "$out.tmp.$$" "$out"

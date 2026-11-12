@@ -1,0 +1,13 @@
+[Unit]
+Description=Notes vault triage with Claude Code
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/Dokumente/Notizen
+# No Bash, web or MCP tools; file tools are confined to the vault.
+# Refresh the GitHub overview first; "-" keeps the triage running if GitHub is unreachable.
+ExecStartPre=-%h/.local/bin/notizen-github
+ExecStart=%h/.local/share/mise/installs/claude/latest/claude -p /triage --model sonnet --tools Read,Edit,Write,Glob,Grep --strict-mcp-config --permission-mode acceptEdits
+# Commit afterwards so `git show` shows what the run changed.
+ExecStartPost=/bin/sh -c 'git add -A && git commit -q -m "chore: 🔧 Triage $(date +%%F)" || true'

@@ -1,0 +1,2 @@
+# Session state playwright-cli writes into the working directory
+/.playwright-cli/

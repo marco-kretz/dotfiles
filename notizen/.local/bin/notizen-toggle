@@ -1,0 +1,8 @@
+#!/bin/sh
+# Mod+N: show/hide the notes scratchpad; when showing it, jump to today's daily note
+# (Obsidian only creates the daily note on startup, not after standby).
+if umbriel windows --json | jq -e 'any(.[]; .scratchpad == "notizen" and (.visible | not))' >/dev/null; then
+  xdg-open 'obsidian://daily?vault=Notizen' >/dev/null 2>&1
+  "$HOME/.local/bin/notizen-github" >/dev/null 2>&1 &
+fi
+exec umbriel msg scratchpad-toggle notizen

@@ -1,6 +1,5 @@
 """Run with: python -m unittest discover -s tests"""
 
-import json
 import os
 from pathlib import Path
 import subprocess
@@ -42,9 +41,8 @@ class AgentSetupTest(unittest.TestCase):
                 self.assertTrue((target / 'local').is_dir())
                 self.assertFalse((target / 'retired').is_symlink())
 
-    def test_shared_skills_and_pi_policy(self):
+    def test_shared_skills(self):
         skills = ROOT / 'agents/.agents/skills'
-        self.assertFalse((skills / 'why').exists())
         for skill in skills.glob('*/SKILL.md'):
             text = skill.read_text()
             self.assertTrue(text.startswith('---\n'), skill)
@@ -53,24 +51,9 @@ class AgentSetupTest(unittest.TestCase):
             self.assertIn('description:', frontmatter, skill)
             fences = sum(line.startswith('```') for line in text.splitlines())
             self.assertEqual(fences % 2, 0, skill)
-            if 'disable-model-invocation: true' in frontmatter:
-                metadata = skill.parent / 'agents/openai.yaml'
-                self.assertIn('allow_implicit_invocation: false', metadata.read_text())
-        settings = json.loads((ROOT / 'pi/.pi/agent/settings.json.example').read_text())
-        roles = settings['subagents']['agentOverrides']
-        for name in ('scout', 'reviewer'):
-            self.assertEqual(roles[name]['tools'], ['read', 'grep', 'find', 'ls'])
-        for role in roles.values():
-            self.assertTrue(role['inheritGlobalContext'])
-        self.assertEqual(roles['delegate']['thinking'], 'medium')
-        self.assertEqual(settings['packages'][0]['extensions'], [])
-        self.assertFalse((ROOT / 'agents/.agents/AGENTS.md').exists())
-        for harness, name in [('pi/.pi/agent', 'AGENTS.md'), ('claude-code/.claude', 'CLAUDE.md'), ('codex/.codex', 'AGENTS.md')]:
-            text = (ROOT / harness / name).read_text()
-            self.assertNotIn('~/.agents/AGENTS.md', text)
-            self.assertIn('ddev worktree <branch>', text)
-            self.assertIn('Conventional Commits', text)
-
+        text = (ROOT / 'claude-code/.claude/CLAUDE.md').read_text()
+        self.assertIn('ddev worktree <branch>', text)
+        self.assertIn('Conventional Commits', text)
 
 if __name__ == '__main__':
     unittest.main()

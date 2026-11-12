@@ -40,7 +40,7 @@ worktree's database: confirm the exact disposable project and uncommitted state 
 
 ## Delegation and review
 
-- Use Claude Code's native subagents, not Pi or Codex agent names and tool APIs.
+- Use Claude Code's native subagents.
 - Delegate large-file reads and multi-file searches to Explore when only a bounded conclusion is needed; use targeted reads for small questions.
 - For the shared `pull-request` skill, use `code-quality-reviewer` for a fresh, read-only review before creating a PR. Supply the actual base/head, diff scope, project rules, and validation evidence.
 - Keep implementation and publication decisions in the parent. Reviewers report findings; they do not edit or run test suites.
