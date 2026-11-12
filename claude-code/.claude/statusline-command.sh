@@ -59,7 +59,7 @@ else
   model_display="${model:-"--"}"
 fi
 
-# Truecolor from the Omarchy akari palette (~/.config/omarchy/themes/akari/colors.toml)
+# Truecolor from the Akari palette (~/.config/noctalia/palettes/Akari.json)
 hex() { printf '\e[38;2;%d;%d;%dm' 0x${1:1:2} 0x${1:3:2} 0x${1:5:2}; }
 dim=$(hex '#a79c8c'); blue=$(hex '#91bff2'); green=$(hex '#85d9c3'); magenta=$(hex '#ff6b75')
 yellow=$(hex '#efd08a'); red=$(hex '#ff9585'); reset=$'\e[0m'

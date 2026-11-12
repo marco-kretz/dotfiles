@@ -115,12 +115,23 @@ def main():
         subprocess.run(["openrgb", "-m", "direct", "-c", openrgb_accent(p, CONFIG)], capture_output=True)
 
 
+FIXTURE = {"dark": {
+    "mPrimary": "#ff6b75", "mSurface": "#1c1b19", "mOnSurface": "#e8dcc8",
+    "mSurfaceVariant": "#302c28", "mOnSurfaceVariant": "#a79c8c", "mOutline": "#3d3733",
+    "mShadow": "#11100f", "mOnHover": "#fff2dd",
+    "terminal": {
+        "normal": {"black": "#1c1b19", "red": "#ff9585", "green": "#85d9c3", "yellow": "#efd08a",
+                   "blue": "#91bff2", "magenta": "#ceb2ec", "cyan": "#a7dceb", "white": "#e8dcc8"},
+        "bright": {"black": "#a79c8c", "red": "#ffb3a5", "green": "#a7efda", "yellow": "#ffe3a6",
+                   "blue": "#b6d7ff", "magenta": "#e5ceff", "cyan": "#c6f0fa", "white": "#fff2dd"},
+        "foreground": "#e8dcc8", "background": "#1c1b19", "cursor": "#fff2dd",
+    },
+}}
+
+
 def check():
     with tempfile.TemporaryDirectory() as d:
-        palette = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../../..",
-                               "omarchy-theme-akari/noctalia/Akari.json")
-        os.makedirs(os.path.join(d, "palettes"))
-        shutil.copy(palette, os.path.join(d, "palettes/Akari.json"))
+        write(os.path.join(d, "palettes/Akari.json"), FIXTURE)
         settings = os.path.join(d, "settings.toml")
         assert active_palette(settings, d) is None
         write(settings, '[theme]\nsource = "community"\ncustom_palette = "Akari"\n')

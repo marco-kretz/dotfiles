@@ -5,7 +5,7 @@ PartOf=graphical-session.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash -c '%h/.config/omarchy/hooks/theme-set.d/openrgb-accent.sh "$(cat %h/.local/state/omarchy/current/theme.name)"'
+ExecStart=%h/.config/noctalia/palette-sync
 RemainAfterExit=yes
 
 [Install]

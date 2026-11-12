@@ -41,7 +41,7 @@
     }
   },
   "tui": "fullscreen",
-  "theme": "custom:omarchy",
+  "theme": "dark",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "promptSuggestionEnabled": false

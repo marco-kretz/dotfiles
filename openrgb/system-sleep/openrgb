@@ -1,5 +1,5 @@
 #!/bin/bash
-# systemd-sleep hook: turn OpenRGB off before suspend, restore theme color after resume.
+# systemd-sleep hook: turn OpenRGB off before suspend, restore the Noctalia accent after resume.
 exec 2>&1
 log() { logger -t openrgb-sleep "$*"; }
 
@@ -11,12 +11,7 @@ case "$1" in
     log "pre: openrgb blank exit=$?"
     ;;
   post)
-    THEME=$(cat /home/marco/.local/state/omarchy/current/theme.name 2>/dev/null)
-    if [ -n "$THEME" ]; then
-      runuser -u marco -- /home/marco/.config/omarchy/hooks/theme-set.d/openrgb-accent.sh "$THEME" >/dev/null 2>&1
-      log "post: restore theme=$THEME exit=$?"
-    else
-      log "post: no theme name found"
-    fi
+    runuser -u marco -- env HOME=/home/marco /home/marco/.config/noctalia/palette-sync >/dev/null 2>&1
+    log "post: palette-sync exit=$?"
     ;;
 esac
