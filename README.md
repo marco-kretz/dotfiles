@@ -3,7 +3,7 @@
 My personal dotfiles: configs and small scripts that reflect my own preferences and setup.
 Feel free to use, copy or adapt whatever you like.
 
-Machine: [CachyOS](https://cachyos.org/) with [Niri](https://github.com/YaLTeR/niri) / Umbriel and the
+Machine: [CachyOS](https://cachyos.org/) with [Niri](https://github.com/YaLTeR/niri) / [Umbriel](https://github.com/noctalia-dev/umbriel) and the
 [Noctalia](https://github.com/noctalia-dev/noctalia-shell) shell, Foot, fish and Starship.
 Each top-level directory is a [GNU Stow](https://www.gnu.org/software/stow/) package.
 
