@@ -9,7 +9,7 @@
 - Do not claim verification you did not perform. Flag risky or destructive operations before acting.
 - If an approach fails twice, stop repeating it. Check the docs or alternatives, then choose the simplest in-scope solution.
 - When third-party behavior gets in the way, prefer its documented configuration, opt-out, hook, or extension point over a compensation layer.
-- Use Conventional Commits. Do not commit, push, publish, or deploy without user authorization.
+- Use Conventional Commits with a Gitmoji (unicode, not `:code:`) after the colon, e.g. `fix(theme): 🐛 Frame ad slots`, `feat: ✨ …`, `refactor: ♻️ …`, `docs: 📝 …`, `chore: 🔧 …`. A project's own commit convention wins. Do not commit, push, publish, or deploy without user authorization.
 - Treat skills as workflow guidance, not permission to expand scope or perform remote writes. Respect review-only requests.
 
 ## Code and validation
@@ -49,6 +49,7 @@ worktree's database: confirm the exact disposable project and uncommitted state 
 ## Browser testing
 
 - Use `playwright-cli` (headless) from Bash; do not use browser MCP tools.
+- `playwright-cli` is installed globally via mise (`npm:@playwright/cli`). If it is not on PATH, run it as `mise x -- playwright-cli …`; do not install it via npm/npx.
 - Prefer `find <text>`, `eval`, and scoped `snapshot <ref>` over full-page snapshots.
 - Screenshot only when layout matters; save to `$TMPDIR` and Read the file.
 - One session per task (`-s <name>`), `close` when done.
