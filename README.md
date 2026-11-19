@@ -16,7 +16,7 @@ Each top-level directory is a [GNU Stow](https://www.gnu.org/software/stow/) pac
 | `claude-code` | Claude Code instructions, subagents, statusline, settings template |
 | `playwright` | Headless Playwright CLI defaults |
 | `notizen` | Daily Claude Code triage of my Obsidian vault, GitHub overview, scratchpad toggle |
-| `noctalia` | Hook that syncs the Noctalia palette to Firefox, Vesktop, Brave and OpenRGB |
+| `noctalia` | Idle timeouts (lock + screen off 5 min, suspend 15 min) and a hook that syncs the Noctalia palette to Firefox, Vesktop, Brave and OpenRGB |
 | `openrgb` | OpenRGB profiles, login and sleep hooks |
 | `pipewire` | MMX 300 EQ, autogain block, no suspend-on-idle |
 | `ddev` | `ddev worktree <branch>`: git worktree as its own DDEV project |

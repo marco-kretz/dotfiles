@@ -1,0 +1,12 @@
+# Lock and turn the screens off after 5 minutes idle, suspend after 15.
+[idle.behavior.lock]
+enabled = true
+timeout = 300.0
+
+[idle.behavior.screen-off]
+enabled = true
+timeout = 300.0
+
+[idle.behavior.lock-and-suspend]
+enabled = true
+timeout = 900.0
