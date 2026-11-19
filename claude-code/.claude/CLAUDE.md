@@ -43,6 +43,7 @@ worktree's database: confirm the exact disposable project and uncommitted state 
 - Use Claude Code's native subagents.
 - Delegate large-file reads and multi-file searches to Explore when only a bounded conclusion is needed; use targeted reads for small questions.
 - For the shared `pull-request` skill, use `code-quality-reviewer` for a fresh, read-only review before creating a PR. Supply the actual base/head, diff scope, project rules, and validation evidence.
+- When strict code-quality review (`mkr-code-quality-review`) is requested, also run `mkr-code-quality-reviewer` in parallel with the same inputs.
 - Keep implementation and publication decisions in the parent. Reviewers report findings; they do not edit or run test suites.
 - If the configured reviewer is unavailable or fails to launch, report the blocker rather than silently substituting another harness or an in-session review.
 - For DDEV projects, do not use EnterWorktree; follow the DDEV worktree rules above.
