@@ -3,7 +3,8 @@ name: pull-request-review
 description: >-
   Review an existing pull request of the current repository, given its number
   or GitHub URL. Use when the user asks to review a PR, passes a PR link or
-  number for review, or wants review comments or replies posted on a PR.
+  number for review, wants review comments or replies posted on a PR, or
+  hands over review feedback received on a PR to evaluate and address.
 ---
 
 # Pull Request Review
@@ -23,6 +24,16 @@ Review the given pull request thoroughly and report findings. Reviewing does not
    - Project rules: conventions and constraints from the repository instructions.
    - Structure: apply the criteria of [mkr-code-quality-review](../mkr-code-quality-review/SKILL.md).
 6. Report to the user in the conversation's language: a verdict (approve, comment, or request changes) and a small set of findings ordered by severity, each with file/line, the concrete failure mode or cost, and a suggested fix. Separate problems introduced by the PR from pre-existing debt. State what was not verified; do not invent test evidence.
+
+## Received Feedback
+
+When asked to address review feedback, treat each point as a claim, not a task:
+
+1. Verify it against the code and reproduce it where possible. Call out points that are wrong, inflated, or style preference, and say why.
+2. Classify each valid point as introduced by the PR or pre-existing.
+3. For each valid point introduced by the PR, say why earlier work or review missed it.
+4. Fix only valid points within the PR's scope. Name pre-existing issues instead of silently fixing them.
+5. Re-verify each fix against the reproduction.
 
 ## Posting
 

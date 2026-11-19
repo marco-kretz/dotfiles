@@ -6,7 +6,9 @@ description: "Generate or edit images with OpenAI's GPT-Image-2.5 models (flare 
 # OpenAI Image Generation
 
 `gen_image.py` calls `v1/images/generations` and `v1/images/edits` directly (stdlib
-only, no `openai` SDK needed). Requires `OPENAI_API_KEY` in the environment.
+only, no `openai` SDK needed). Requires `OPENAI_API_KEY` in the environment. If it is not set,
+load it per call from `~/.config/openai.env` (mode 600, see `docs/setup.md`) instead of exporting it
+globally: `. ~/.config/openai.env && python3 <skill-directory>/gen_image.py ...`. Never print the key.
 
 ## Model choice
 
